@@ -108,13 +108,13 @@ public class DBUsers {
         catch (SQLException e) { System.out.println("Such data already exists");}
     }*/
 
-    public boolean deleteInfo(User user){
-        if (!infoExists("SELECT * FROM user WHERE ID =" + user.getId()))
+    public boolean deleteInfo(int id){
+        if (!infoExists("SELECT * FROM user WHERE ID =" + id))
             return false;
         else {
             try {
                 Statement st = conn.createStatement();
-                st.executeUpdate("DELETE FROM user WHERE ID="+user.getId());
+                st.executeUpdate("DELETE FROM user WHERE ID=" + id);
                 return true;
             }
             catch (SQLException e) { return false; }

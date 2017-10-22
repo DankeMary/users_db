@@ -9,6 +9,7 @@ import utils.LogUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Scanner;
 
 public class DBUsers_UI {
     private DBUsers db;
@@ -78,21 +79,62 @@ public class DBUsers_UI {
         LogUtils.printActionResult(userID, "edited");
     }
 
-    public void deleteInfo(){
+    public void deleteUser(){
         if (db.isEmpty()) {
             System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
             return;
         }
+        System.out.println("Print the list?");
+        if (HelpUtils.getBool(false))
+            printUsers();
 
         LogUtils.printInputIDForActionMessage("delete");
         int userID = HelpUtils.getInt(1, Integer.MAX_VALUE);
-        User user = db.getUserByID(userID);
+        /*User user = db.getUserByID(userID);
         if (user == null){
             System.out.println("User with such ID wasn't found"); //LogUtils.printItemNotFoundMessage(userID);
             return;
+        }*/
+        if (db.deleteInfo(userID))
+            LogUtils.printActionResult(userID, "deleted");
+        else
+            LogUtils.printItemNotFoundMessage(userID);
+    }
+    private void deleteUser(String id) {
+        try {
+            int itemID = Integer.parseInt(id);
+            if (db.deleteInfo(itemID))
+                LogUtils.printActionResult(itemID, "removed");
+            else {
+                LogUtils.printItemNotFoundMessage(itemID);
+            }
+        } catch (NumberFormatException e) {
+            LogUtils.printWrongInputFormatMessage(id);
         }
-        db.deleteInfo(user);
-        LogUtils.printActionResult(userID, "deleted");
+    }
+
+    private void deleteSeveralUsers() {
+        if (db.isEmpty()) {
+            System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
+            return;
+        }
+        System.out.println("Print the list?");
+        if (HelpUtils.getBool(false))
+            printUsers();
+
+        Scanner in = new Scanner(System.in);
+        System.out.print("Input IDs of users to erase: ");
+        while (true) {
+            String numbers = in.nextLine().trim();
+            if (numbers.equals("")) {
+                LogUtils.printEmptyInputError();
+                continue;
+            }
+            String[] ids = numbers.split(" +");
+            for (String num : ids)
+                deleteUser(num);
+            break;
+        }
     }
     /*
     public void test(){
