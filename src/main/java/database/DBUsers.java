@@ -96,4 +96,36 @@ public class DBUsers {
             catch (SQLException e) { return false; }
         }
     }
+
+    public boolean isEmpty(){
+        String query_id = "SELECT * FROM user";
+        try {
+            Statement st = conn.createStatement();
+
+            ResultSet rs = st.executeQuery(query_id);
+            return !rs.next();
+        }
+        catch(SQLException e) {
+            //return false;
+        }
+        return true;
+    }
+
+    public ResultSet sortUsers(){
+        String query_id = "SELECT * FROM user ORDER BY `LAST_NAME`, 'NAME'";
+        try {
+            Statement st = conn.createStatement();
+
+            return st.executeQuery(query_id);
+        }
+        catch(SQLException e) {
+            // return null;
+        }
+        return null;
+
+    }
+
+    /*sort: (SELECT * FROM user ORDER BY `LAST_NAME`, 'NAME';
+
+    */
 }

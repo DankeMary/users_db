@@ -1,3 +1,5 @@
+import view.DBUsers_UI;
+
 import java.sql.*;
 
 public class Main {
@@ -13,7 +15,7 @@ public class Main {
     private static ResultSet rs;
 
     public static void main(String args[]) {
-        String query = "select id, name from user";
+       String query = "select id, name from user";
 
         try {
             conn = DriverManager.getConnection(URL, user, password);
@@ -37,6 +39,7 @@ public class Main {
             try { rs.close(); } catch(SQLException se) { }
         }
 
+        //DBUsers_UI smth = new DBUsers_UI();
 
         /*String str = null;
         System.out.print(str);*/
