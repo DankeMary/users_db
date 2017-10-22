@@ -1,6 +1,8 @@
 package database;
 
 import entity.User;
+import exception.EmailException;
+import exception.LoginException;
 
 import java.sql.*;
 
@@ -20,7 +22,7 @@ public class DBUsers {
         }
     }
 
-    private boolean infoExists(User user) {
+    private /*boolean*/ void infoExists(User user) throws Exception {
         //String query_id = "SELECT * FROM user WHERE ID ='" + user.getId()+"'";
         String query_login ="SELECT * FROM user WHERE Login ='" + user.getLogin()+"'";
         String query_email ="SELECT * FROM user WHERE Email ='" + user.getEmail()+"'";
@@ -28,17 +30,19 @@ public class DBUsers {
             Statement st = conn.createStatement();
 
             ResultSet rs = st.executeQuery(query_login);
-            if(rs.next())
-                return true;
+            if(rs.next()){
+                throw new LoginException("User with such login already exists!");
+            }
 
             rs = st.executeQuery(query_email);
-            if (rs.next())
-                return true;
+            if (rs.next()) {
+                throw new EmailException("User with such email already exists!");
+            }
         }
         catch(SQLException e) {
             //return false;
         }
-        return false;
+        //return false;
     }
 
     private boolean infoExists(int id) {
@@ -55,18 +59,16 @@ public class DBUsers {
         }
         return false;
     }
-
-    public boolean addInfo(User user){
-        if (infoExists(user))
+//todo: how to deal with exceptions???
+    public boolean addInfo(User user) throws Exception{
+        infoExists(user);
+        try {
+            Statement st = conn.createStatement();
+            st.execute("INSERT INTO user(NAME, LAST_NAME, LOGIN, EMAIL) VALUES(" + user.getFirstName() + ", "
+                    + user.getLastName() + ", " + user.getLogin() + ", " + user.getEmail() + ");");
+            return true;
+        } catch (SQLException e) {
             return false;
-        else {
-            try {
-                Statement st = conn.createStatement();
-                st.execute("INSERT INTO user(NAME, LAST_NAME, LOGIN, EMAIL) VALUES(" + user.getFirstName() + ", "
-                        + user.getLastName() + ", " + user.getLogin() + ", " + user.getEmail() + ");");
-                return true;
-            }
-            catch (SQLException e) { return false; }
         }
     }
 

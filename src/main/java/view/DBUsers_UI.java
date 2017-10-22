@@ -2,6 +2,7 @@ package view;
 
 import database.DBUsers;
 import entity.User;
+import utils.HelpUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,10 +14,27 @@ public class DBUsers_UI {
         db = new DBUsers();
     }
 
+    public void addInfo() {
+        User newUser = HelpUtils.getUser();
+
+        while (!db.addInfo(newUser)) {
+            System.out.println("User with such login or email already exists! Would you like to change the id?");
+            if (HelpUtils.getBool()) {
+                System.out.print("ID: ");
+                newProduct.setID(HelpUtils.getInt(1, Integer.MAX_VALUE));
+            } else return;
+        }
+
+        if (!db.addInfo(newUser))
+            System.out.println("User wasn't added!");
+    }
     public void printUsers() {
         ResultSet rs = db.getAllUsers();
-        try {
+        printUsers(rs);
+    }
 
+    public void printUsers(ResultSet rs){
+        try {
             while (rs.next()) {
                 User user = new User(); //todo: is it needed?
                 user.setId(rs.getInt(1));
@@ -28,9 +46,5 @@ public class DBUsers_UI {
             }
         }
         catch(SQLException e) {}
-    }
-
-    public void printUsers(ResultSet rs){
-
     }
 }
