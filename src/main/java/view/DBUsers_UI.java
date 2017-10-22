@@ -8,7 +8,6 @@ import utils.HelpUtils;
 import utils.LogUtils;
 import utils.MenuUtils;
 
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -205,10 +204,7 @@ public class DBUsers_UI {
     private static void readFromFile(){}
 
     private static void saveToFile(){}
-    /*
-    public void test(){
-        db.test();
-    }*/
+
     private static void printUsers() {
         ResultSet rs = db.getAllUsers();
         printUsers(rs);

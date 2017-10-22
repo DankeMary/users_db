@@ -38,22 +38,6 @@ public class HelpUtils {
         }
     }
 
-   /* public static Integer getInt(int basic, int min, int max) {
-        Scanner in = new Scanner(System.in);
-        String str;
-
-        while (true) {
-            str = in.nextLine().trim();
-            if (str.equals(""))
-                return basic;
-            else {
-                Integer num = getIntFromString(str, min, max);
-                if (num != null)
-                    return num;
-            }
-        }
-    }*/
-
     public static int countMatches(String str, char ch) {
         int cnt = 0;
         for (int i = 0; i < str.length(); i++)
@@ -157,6 +141,8 @@ public class HelpUtils {
         } else
             return (str.equals("+") || str.equals("yes") || str.equals("y"));
     }
+//todo:!!!!!
+    public static String getFileName(){ return null;}
 
     public static User getUser(){
         User aUser = new User();
