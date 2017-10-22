@@ -45,33 +45,54 @@ public class DBUsers_UI {
     }
 
     public void editInfo(){
+        if (db.isEmpty()) {
+            System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
+            return;
+        }
 
-            if (db.isEmpty()) {
-                System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
-                return;
+        LogUtils.printInputIDForActionMessage("edit");
+        int userID = HelpUtils.getInt(1, Integer.MAX_VALUE);
+        User user = db.getUserByID(userID);
+        if (user == null){
+            System.out.println("User with such ID wasn't found"); //LogUtils.printItemNotFoundMessage(userID);
+            return;
+        }
+        HelpUtils.getUser(user);
+
+        while(true) {
+            if (db.loginlExists(user.getLogin())){
+                System.out.println("User with such login already exists! Change the login");
+                System.out.print("Login: ");
+                user.setLogin(HelpUtils.getString());
+                continue;
             }
-            LogUtils.printInputIDForActionMessage("edit");
-            int userID = HelpUtils.getInt(1, Integer.MAX_VALUE);
-            User user = db.getUserByID(userID);
-            if (user == null){
-                System.out.println("User with such ID wasn't found"); //LogUtils.printItemNotFoundMessage(userID);
-                return;
+            if (db.emailExists(user.getEmail())){
+                System.out.println("User with such email already exists! Change the email");
+                System.out.print("Email: ");
+                user.setEmail(HelpUtils.getEmail());
+                continue;
             }
+            break;
+        }
+        db.editInfo(user);
+        LogUtils.printActionResult(userID, "edited");
+    }
 
-            /*User user = productsList.editItem(itemID);
+    public void deleteInfo(){
+        if (db.isEmpty()) {
+            System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
+            return;
+        }
 
-            if (product == null) {
-                LogUtils.printItemNotFoundMessage(itemID);
-                return;
-            }
-
-            while (productsList.countDuplicates(product.getID()) > 1) {
-                System.out.println("Item with such ID already exists! Change the id");
-                System.out.print("ID: ");
-                product.setID(HelpUtils.getInt(1, Integer.MAX_VALUE));
-            }
-            LogUtils.printActionResult(itemID, "edited");*/
-
+        LogUtils.printInputIDForActionMessage("delete");
+        int userID = HelpUtils.getInt(1, Integer.MAX_VALUE);
+        User user = db.getUserByID(userID);
+        if (user == null){
+            System.out.println("User with such ID wasn't found"); //LogUtils.printItemNotFoundMessage(userID);
+            return;
+        }
+        db.deleteInfo(user);
+        LogUtils.printActionResult(userID, "deleted");
     }
     /*
     public void test(){

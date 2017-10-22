@@ -21,7 +21,7 @@ public class DBUsers {
             sqlEx.printStackTrace();
         }
     }
-    
+
     private boolean infoExists(String query) {
         try {
             Statement st = conn.createStatement();
@@ -33,6 +33,13 @@ public class DBUsers {
             //return false;
         }
         return false;
+    }
+
+    public boolean emailExists(String email){
+        return infoExists("SELECT * FROM user WHERE EMAIL='" + email + "'");
+    }
+    public boolean loginlExists(String login){
+        return infoExists("SELECT * FROM user WHERE LOGIN='" + login + "'");
     }
     /*
         String query_id = "SELECT * FROM user WHERE ID =" + id;
@@ -58,12 +65,13 @@ public class DBUsers {
             }
     }
     public User getUserByID(int id){
-        if (infoExists("SELECT * FROM user WHERE ID =" + id))
+        if (infoExists("SELECT * FROM user WHERE ID=" + id))
             try {
                 Statement st = conn.createStatement();
                 ResultSet rs = st.executeQuery("SELECT * FROM user WHERE ID=" + id);
 
                 User user = new User();
+                rs.next();
                 user.setId(rs.getInt(1));
                 user.setFirstName(rs.getString(2));
                 user.setLastName(rs.getString(3));
@@ -106,7 +114,7 @@ public class DBUsers {
         else {
             try {
                 Statement st = conn.createStatement();
-                st.executeUpdate("DELETE FROM user WHERE WHERE ID="+user.getId());
+                st.executeUpdate("DELETE FROM user WHERE ID="+user.getId());
                 return true;
             }
             catch (SQLException e) { return false; }

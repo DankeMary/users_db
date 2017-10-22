@@ -40,12 +40,12 @@ public class Main {
             try { rs.close(); } catch(SQLException se) { }
         }
 */
-        /*DBUsers_UI smth = new DBUsers_UI();
+        DBUsers_UI smth = new DBUsers_UI();
         smth.printUsers();
         System.out.println();
-        //smth.test();
+        smth.deleteInfo();
         System.out.println();
-        smth.printUsers();*/
+        smth.printUsers();
 
         /*System.out.println(HelpUtils.getName());
         System.out.println(HelpUtils.getEmail());*/
