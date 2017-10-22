@@ -90,11 +90,6 @@ public class DBUsers_UI {
 
         LogUtils.printInputIDForActionMessage("delete");
         int userID = HelpUtils.getInt(1, Integer.MAX_VALUE);
-        /*User user = db.getUserByID(userID);
-        if (user == null){
-            System.out.println("User with such ID wasn't found"); //LogUtils.printItemNotFoundMessage(userID);
-            return;
-        }*/
         if (db.deleteInfo(userID))
             LogUtils.printActionResult(userID, "deleted");
         else
@@ -135,6 +130,14 @@ public class DBUsers_UI {
                 deleteUser(num);
             break;
         }
+    }
+
+    public void sortInfo(){
+        if (db.isEmpty()) {
+            System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
+            return;
+        }
+        printUsers(db.sortUsers());
     }
     /*
     public void test(){
