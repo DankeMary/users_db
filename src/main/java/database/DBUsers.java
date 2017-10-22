@@ -149,6 +149,18 @@ public class DBUsers {
 
     }
 
+    public ResultSet filterUsers(String criterion){
+        String query_filter = "SELECT * FROM user WHERE EMAIL LIKE '" + criterion + "'";
+        try {
+            Statement st = conn.createStatement();
+
+            return st.executeQuery(query_filter);
+        }
+        catch(SQLException e) {
+            // return null;
+        }
+        return null;
+    }
     /*sort: (SELECT * FROM user ORDER BY `LAST_NAME`, 'NAME';
 
     */

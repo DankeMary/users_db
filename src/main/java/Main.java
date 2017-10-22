@@ -43,9 +43,11 @@ public class Main {
         DBUsers_UI smth = new DBUsers_UI();
         smth.printUsers();
         System.out.println();
-        smth.sortInfo();
-        //smth.addInfo();
-       // smth.addInfo();
+        //smth.deleteSeveralUsers();
+        //smth.addUser();
+       //smth.addUser();
+        smth.printUsers();
+        smth.filterUsers();
         System.out.println();
         smth.printUsers();
 

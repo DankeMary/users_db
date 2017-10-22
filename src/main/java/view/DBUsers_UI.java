@@ -6,7 +6,9 @@ import exception.EmailException;
 import exception.LoginException;
 import utils.HelpUtils;
 import utils.LogUtils;
+import utils.MenuUtils;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -18,7 +20,40 @@ public class DBUsers_UI {
         db = new DBUsers();
     }
 
-    public void addInfo() {
+    public void start(){
+        int choice = 1;
+        while (choice != 0) {
+            MenuUtils.printMainMenu();
+            choice = MenuUtils.getMenuItem(0, 7);
+            switch (choice) {
+                case 1:
+                    addUser();
+                    break;
+                case 2:
+                    editUser();
+                    break;
+                case 3:
+                    deleteUser();
+                    break;
+                case 4:
+                    deleteSeveralUsers();
+                    break;
+                case 5:
+                    printUsers();
+                    break;
+                case 6:
+                    sortUsers();
+                    break;
+                case 7:
+                    filterUsers();
+                    break;
+                case 0:
+                default:
+                    break;
+            }
+        }
+    }
+    public void addUser() {
         System.out.println("Input data");
         User newUser = HelpUtils.getUser();
 
@@ -45,7 +80,7 @@ public class DBUsers_UI {
         }
     }
 
-    public void editInfo(){
+    public void editUser(){
         if (db.isEmpty()) {
             System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
             return;
@@ -108,7 +143,7 @@ public class DBUsers_UI {
         }
     }
 
-    private void deleteSeveralUsers() {
+    public void deleteSeveralUsers() {
         if (db.isEmpty()) {
             System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
             return;
@@ -132,12 +167,33 @@ public class DBUsers_UI {
         }
     }
 
-    public void sortInfo(){
+    public void sortUsers(){
         if (db.isEmpty()) {
             System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
             return;
         }
         printUsers(db.sortUsers());
+    }
+    public void filterUsers(){
+        if (db.isEmpty())
+            LogUtils.printEmptyListMessage();
+        else {
+            MenuUtils.printFilterCriteria();
+            int criterion = MenuUtils.getMenuItem(0, 2);
+            if (criterion == 0)
+                return;
+
+            System.out.print("Input the criterion string: ");
+            String criterionStr = HelpUtils.getString();
+            String query;
+            if(criterion == 1)
+                query = criterionStr + "%";
+            else
+                query = "%" + criterionStr;
+
+            ResultSet res = db.filterUsers(query);
+            printUsers(res);
+        }
     }
     /*
     public void test(){
@@ -150,7 +206,11 @@ public class DBUsers_UI {
 
     public void printUsers(ResultSet rs){
         try {
-            while (rs.next()) {
+            if (!rs.next())
+                System.out.println("No data was found");
+            else {
+                rs.beforeFirst();
+                while (rs.next()) {
                 User user = new User(); //todo: is it needed?
                 user.setId(rs.getInt(1));
                 user.setFirstName(rs.getString(2));
@@ -158,6 +218,7 @@ public class DBUsers_UI {
                 user.setLogin(rs.getString(4));
                 user.setEmail(rs.getString(5));
                 System.out.println(user);
+            }
             }
         }
         catch(SQLException e) {}

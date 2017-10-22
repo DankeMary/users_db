@@ -9,12 +9,12 @@ public class MenuUtils {
         return HelpUtils.getInt(min, max);
     }
 
-    public static void printStartMenu(){
+   /* public static void printStartMenu(){
         System.out.println("\n----Start menu----");
         System.out.println("1 - Connect to database");
         System.out.println("0 - Exit");
         System.out.println("------------------");
-    }
+    }*/
 
     public static void printMainMenu(){
         System.out.println("\n----Main  menu----");
@@ -24,7 +24,8 @@ public class MenuUtils {
         System.out.println("4 - Remove several users info");
         System.out.println("5 - Print users");
         System.out.println("6 - Sort users");
-        System.out.println("7 - Filter users");
+        System.out.println("7 - Filter users by email");
+        System.out.println("8 - Upload from file");
         System.out.println("0 - Go to Main Menu");
         System.out.println("------------------");
     }
@@ -40,9 +41,8 @@ public class MenuUtils {
 
     public static void printFilterCriteria() {
         System.out.println("------------------");
-        System.out.println("1 - Equals ...");
-        System.out.println("2 - Starts with ...");
-        System.out.println("3 - Ends with ...");
+        System.out.println("1 - Starts with ...");
+        System.out.println("2 - Ends with ...");
         System.out.println("0 - Go to Main Menu");
         System.out.println("------------------");
     }
