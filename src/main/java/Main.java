@@ -1,3 +1,4 @@
+import utils.HelpUtils;
 import view.DBUsers_UI;
 
 import java.sql.*;
@@ -39,10 +40,13 @@ public class Main {
             try { rs.close(); } catch(SQLException se) { }
         }
 */
-        DBUsers_UI smth = new DBUsers_UI();
+        /*DBUsers_UI smth = new DBUsers_UI();
         smth.printUsers();
         smth.addInfo();
-        smth.printUsers();
+        smth.printUsers();*/
+
+        /*System.out.println(HelpUtils.getName());
+        System.out.println(HelpUtils.getEmail());*/
         /*smth.addInfo();
         smth.printUsers();*/
         /*String str = null;

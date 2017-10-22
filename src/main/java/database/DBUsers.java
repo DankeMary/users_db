@@ -22,7 +22,7 @@ public class DBUsers {
         }
     }
 
-    private /*boolean*/ void infoExists(User user) throws LoginException, EmailException{
+    /*private void infoExists(User user) throws LoginException, EmailException{
         //String query_id = "SELECT * FROM user WHERE ID ='" + user.getId()+"'";
         String query_login ="SELECT * FROM user WHERE Login ='" + user.getLogin()+"'";
         String query_email ="SELECT * FROM user WHERE Email ='" + user.getEmail()+"'";
@@ -43,9 +43,21 @@ public class DBUsers {
             //return false;
         }
         //return false;
-    }
+    }*/
 
-    private boolean infoExists(int id) {
+    private boolean infoExists(String query) {
+        try {
+            Statement st = conn.createStatement();
+
+            ResultSet rs = st.executeQuery(query);
+            return (rs.next());
+        }
+        catch(SQLException e) {
+            //return false;
+        }
+        return false;
+    }
+    /*private boolean idExists(int id) {
         String query_id = "SELECT * FROM user WHERE ID =" + id;
         try {
             Statement st = conn.createStatement();
@@ -59,21 +71,52 @@ public class DBUsers {
         }
         return false;
     }
-//todo: how to deal with exceptions???
-    public void addInfo(User user) throws LoginException, EmailException{ //todo: is THROWS needed here?
-        infoExists(user);
+    private boolean loginExists(String login) {
+        String query_login = "SELECT * FROM user WHERE LOGIN='" + login +"'";
         try {
             Statement st = conn.createStatement();
-            st.execute(String.format("INSERT INTO user(NAME, LAST_NAME, LOGIN, EMAIL) VALUES('%s', '%s', '%s', '%s')",
-                    user.getFirstName(), user.getLastName(),user.getLogin(), user.getEmail()));
-            //return true;
-        } catch (SQLException e) {
+
+            ResultSet rs = st.executeQuery(query_login);
+            if(rs.next())
+                return true;
+        }
+        catch(SQLException e) {
             //return false;
         }
+        return false;
+    }
+    private boolean emailExists(String email) {
+        String query_email = "SELECT * FROM user WHERE EMAIL='" + email + "'";
+        try {
+            Statement st = conn.createStatement();
+
+            ResultSet rs = st.executeQuery(query_email);
+            if(rs.next())
+                return true;
+        }
+        catch(SQLException e) {
+            //return false;
+        }
+        return false;
+    }*/
+//todo: how to deal with exceptions???
+    public void addInfo(User user) throws LoginException, EmailException{ //todo: is THROWS needed here?
+        if (infoExists("SELECT * FROM user WHERE LOGIN='" + user.getLogin() +"'"))
+            throw new LoginException();
+        else if (infoExists("SELECT * FROM user WHERE EMAIL='" + user.getEmail() + "'"))
+            throw new EmailException();
+        else
+            try {
+                Statement st = conn.createStatement();
+                st.execute(String.format("INSERT INTO user(NAME, LAST_NAME, LOGIN, EMAIL) VALUES('%s', '%s', '%s', '%s')",
+                        user.getFirstName(), user.getLastName(),user.getLogin(), user.getEmail()));
+            } catch (SQLException e) {
+                //return false;
+            }
     }
 
     public boolean editInfo(User user){
-        if (!infoExists(user.getId()))
+        if (!idExists(user.getId()))
             return false;
         else {
             try {
@@ -87,7 +130,7 @@ public class DBUsers {
     }
 
     public boolean deleteInfo(User user){
-        if (!infoExists(user.getId()))
+        if (!idExists(user.getId()))
             return false;
         else {
             try {

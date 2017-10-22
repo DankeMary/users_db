@@ -74,7 +74,7 @@ public class HelpUtils {
     }
 
     public static boolean checkEmail(String email) {
-        return (email.indexOf('@') == -1 || email.indexOf('.') == -1 || countMatches(email, '@') != 1);
+        return (email.indexOf('@') != -1 && email.indexOf('.') != -1 && countMatches(email, '@') == 1);
     }
 
     public static String getString() {
