@@ -5,6 +5,7 @@ import entity.User;
 import exception.EmailException;
 import exception.LoginException;
 import utils.HelpUtils;
+import utils.LogUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,6 +43,40 @@ public class DBUsers_UI {
             }
         }
     }
+
+    public void editInfo(){
+
+            if (db.isEmpty()) {
+                System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
+                return;
+            }
+            LogUtils.printInputIDForActionMessage("edit");
+            int userID = HelpUtils.getInt(1, Integer.MAX_VALUE);
+            User user = db.getUserByID(userID);
+            if (user == null){
+                System.out.println("User with such ID wasn't found"); //LogUtils.printItemNotFoundMessage(userID);
+                return;
+            }
+
+            /*User user = productsList.editItem(itemID);
+
+            if (product == null) {
+                LogUtils.printItemNotFoundMessage(itemID);
+                return;
+            }
+
+            while (productsList.countDuplicates(product.getID()) > 1) {
+                System.out.println("Item with such ID already exists! Change the id");
+                System.out.print("ID: ");
+                product.setID(HelpUtils.getInt(1, Integer.MAX_VALUE));
+            }
+            LogUtils.printActionResult(itemID, "edited");*/
+
+    }
+    /*
+    public void test(){
+        db.test();
+    }*/
     public void printUsers() {
         ResultSet rs = db.getAllUsers();
         printUsers(rs);

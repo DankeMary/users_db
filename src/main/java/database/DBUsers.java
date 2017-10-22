@@ -21,30 +21,7 @@ public class DBUsers {
             sqlEx.printStackTrace();
         }
     }
-
-    /*private void infoExists(User user) throws LoginException, EmailException{
-        //String query_id = "SELECT * FROM user WHERE ID ='" + user.getId()+"'";
-        String query_login ="SELECT * FROM user WHERE Login ='" + user.getLogin()+"'";
-        String query_email ="SELECT * FROM user WHERE Email ='" + user.getEmail()+"'";
-        try {
-            Statement st = conn.createStatement();
-
-            ResultSet rs = st.executeQuery(query_login);
-            if(rs.next()){
-                throw new LoginException("User with such login already exists!");
-            }
-
-            rs = st.executeQuery(query_email);
-            if (rs.next()) {
-                throw new EmailException("User with such email already exists!");
-            }
-        }
-        catch(SQLException e) {
-            //return false;
-        }
-        //return false;
-    }*/
-
+    
     private boolean infoExists(String query) {
         try {
             Statement st = conn.createStatement();
@@ -57,47 +34,13 @@ public class DBUsers {
         }
         return false;
     }
-    /*private boolean idExists(int id) {
+    /*
         String query_id = "SELECT * FROM user WHERE ID =" + id;
-        try {
-            Statement st = conn.createStatement();
 
-            ResultSet rs = st.executeQuery(query_id);
-            if(rs.next())
-                return true;
-        }
-        catch(SQLException e) {
-            //return false;
-        }
-        return false;
-    }
-    private boolean loginExists(String login) {
         String query_login = "SELECT * FROM user WHERE LOGIN='" + login +"'";
-        try {
-            Statement st = conn.createStatement();
 
-            ResultSet rs = st.executeQuery(query_login);
-            if(rs.next())
-                return true;
-        }
-        catch(SQLException e) {
-            //return false;
-        }
-        return false;
-    }
-    private boolean emailExists(String email) {
         String query_email = "SELECT * FROM user WHERE EMAIL='" + email + "'";
-        try {
-            Statement st = conn.createStatement();
 
-            ResultSet rs = st.executeQuery(query_email);
-            if(rs.next())
-                return true;
-        }
-        catch(SQLException e) {
-            //return false;
-        }
-        return false;
     }*/
 //todo: how to deal with exceptions???
     public void addInfo(User user) throws LoginException, EmailException{ //todo: is THROWS needed here?
@@ -114,9 +57,27 @@ public class DBUsers {
                 //return false;
             }
     }
+    public User getUserByID(int id){
+        if (infoExists("SELECT * FROM user WHERE ID =" + id))
+            try {
+                Statement st = conn.createStatement();
+                ResultSet rs = st.executeQuery("SELECT * FROM user WHERE ID=" + id);
+
+                User user = new User();
+                user.setId(rs.getInt(1));
+                user.setFirstName(rs.getString(2));
+                user.setLastName(rs.getString(3));
+                user.setLogin(rs.getString(4));
+                user.setEmail(rs.getString(5));
+                return user;
+            }
+            catch (SQLException e) { return null; }
+        else
+            return null;
+    }
 
     public boolean editInfo(User user){
-        if (!idExists(user.getId()))
+        if (!infoExists("SELECT * FROM user WHERE ID =" + user.getId()))
             return false;
         else {
             try {
@@ -128,9 +89,19 @@ public class DBUsers {
             catch (SQLException e) { return false; }
         }
     }
+/*
+    public void test(){
+        try {
+            Statement st = conn.createStatement();
+
+            st.executeUpdate("UPDATE user SET NAME='', LAST_NAME='', LOGIN='billie1', EMAIL='bla' WHERE ID=2");
+
+        }
+        catch (SQLException e) { System.out.println("Such data already exists");}
+    }*/
 
     public boolean deleteInfo(User user){
-        if (!idExists(user.getId()))
+        if (!infoExists("SELECT * FROM user WHERE ID =" + user.getId()))
             return false;
         else {
             try {

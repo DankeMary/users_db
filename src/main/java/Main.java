@@ -42,7 +42,9 @@ public class Main {
 */
         /*DBUsers_UI smth = new DBUsers_UI();
         smth.printUsers();
-        smth.addInfo();
+        System.out.println();
+        //smth.test();
+        System.out.println();
         smth.printUsers();*/
 
         /*System.out.println(HelpUtils.getName());
