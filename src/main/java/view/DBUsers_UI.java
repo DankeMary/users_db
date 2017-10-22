@@ -14,13 +14,13 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class DBUsers_UI {
-    private DBUsers db;
+    private static DBUsers db;
 
     public DBUsers_UI(){
         db = new DBUsers();
     }
 
-    public void start(){
+    public static void start(){
         int choice = 1;
         while (choice != 0) {
             MenuUtils.printMainMenu();
@@ -47,13 +47,19 @@ public class DBUsers_UI {
                 case 7:
                     filterUsers();
                     break;
+                case 8:
+                    readFromFile();
+                    break;
+                case 9:
+                    saveToFile();
+                    break;
                 case 0:
                 default:
                     break;
             }
         }
     }
-    public void addUser() {
+    private static void addUser() {
         System.out.println("Input data");
         User newUser = HelpUtils.getUser();
 
@@ -80,7 +86,7 @@ public class DBUsers_UI {
         }
     }
 
-    public void editUser(){
+    private static void editUser(){
         if (db.isEmpty()) {
             System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
             return;
@@ -114,7 +120,7 @@ public class DBUsers_UI {
         LogUtils.printActionResult(userID, "edited");
     }
 
-    public void deleteUser(){
+    private static void deleteUser(){
         if (db.isEmpty()) {
             System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
             return;
@@ -130,7 +136,7 @@ public class DBUsers_UI {
         else
             LogUtils.printItemNotFoundMessage(userID);
     }
-    private void deleteUser(String id) {
+    private static void deleteUser(String id) {
         try {
             int itemID = Integer.parseInt(id);
             if (db.deleteInfo(itemID))
@@ -143,7 +149,7 @@ public class DBUsers_UI {
         }
     }
 
-    public void deleteSeveralUsers() {
+    private static void deleteSeveralUsers() {
         if (db.isEmpty()) {
             System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
             return;
@@ -167,14 +173,14 @@ public class DBUsers_UI {
         }
     }
 
-    public void sortUsers(){
+    private static void sortUsers(){
         if (db.isEmpty()) {
             System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
             return;
         }
         printUsers(db.sortUsers());
     }
-    public void filterUsers(){
+    private static void filterUsers(){
         if (db.isEmpty())
             LogUtils.printEmptyListMessage();
         else {
@@ -195,16 +201,20 @@ public class DBUsers_UI {
             printUsers(res);
         }
     }
+
+    private static void readFromFile(){}
+
+    private static void saveToFile(){}
     /*
     public void test(){
         db.test();
     }*/
-    public void printUsers() {
+    private static void printUsers() {
         ResultSet rs = db.getAllUsers();
         printUsers(rs);
     }
 
-    public void printUsers(ResultSet rs){
+    private static void printUsers(ResultSet rs){
         try {
             if (!rs.next())
                 System.out.println("No data was found");
