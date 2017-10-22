@@ -41,6 +41,10 @@ public class Main {
 */
         DBUsers_UI smth = new DBUsers_UI();
         smth.printUsers();
+        smth.addInfo();
+        smth.printUsers();
+        /*smth.addInfo();
+        smth.printUsers();*/
         /*String str = null;
         System.out.print(str);*/
 

@@ -170,7 +170,7 @@ public class HelpUtils {
         aUser.setLogin(getString());
 
         System.out.print("Email: ");
-        aUser.setEmail(getString());
+        aUser.setEmail(getEmail());
         return aUser;
     }
 
@@ -185,7 +185,7 @@ public class HelpUtils {
         basic.setLogin(getString(basic.getLogin()));
 
         System.out.print("Email: ");
-        basic.setEmail(getString(basic.getEmail()));
+        basic.setEmail(getEmail(basic.getEmail()));
     }
 
 

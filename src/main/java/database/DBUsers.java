@@ -22,7 +22,7 @@ public class DBUsers {
         }
     }
 
-    private /*boolean*/ void infoExists(User user) throws Exception {
+    private /*boolean*/ void infoExists(User user) throws LoginException, EmailException{
         //String query_id = "SELECT * FROM user WHERE ID ='" + user.getId()+"'";
         String query_login ="SELECT * FROM user WHERE Login ='" + user.getLogin()+"'";
         String query_email ="SELECT * FROM user WHERE Email ='" + user.getEmail()+"'";
@@ -60,15 +60,15 @@ public class DBUsers {
         return false;
     }
 //todo: how to deal with exceptions???
-    public boolean addInfo(User user) throws Exception{
+    public void addInfo(User user) throws LoginException, EmailException{ //todo: is THROWS needed here?
         infoExists(user);
         try {
             Statement st = conn.createStatement();
-            st.execute("INSERT INTO user(NAME, LAST_NAME, LOGIN, EMAIL) VALUES(" + user.getFirstName() + ", "
-                    + user.getLastName() + ", " + user.getLogin() + ", " + user.getEmail() + ");");
-            return true;
+            st.execute(String.format("INSERT INTO user(NAME, LAST_NAME, LOGIN, EMAIL) VALUES('%s', '%s', '%s', '%s')",
+                    user.getFirstName(), user.getLastName(),user.getLogin(), user.getEmail()));
+            //return true;
         } catch (SQLException e) {
-            return false;
+            //return false;
         }
     }
 
@@ -78,8 +78,8 @@ public class DBUsers {
         else {
             try {
                 Statement st = conn.createStatement();
-                st.executeUpdate("UPDATE user SET NAME=" + user.getFirstName() +", LAST_NAME=" + user.getLastName()
-                        + ", LOGIN=" + user.getLogin() +", EMAIL=" + user.getEmail() + " WHERE ID="+user.getId());
+                st.executeUpdate("UPDATE user SET NAME='" + user.getFirstName() +"', LAST_NAME='" + user.getLastName()
+                        + "', LOGIN='" + user.getLogin() +"', EMAIL='" + user.getEmail() + "' WHERE ID="+user.getId());
                 return true;
             }
             catch (SQLException e) { return false; }

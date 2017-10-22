@@ -2,6 +2,8 @@ package view;
 
 import database.DBUsers;
 import entity.User;
+import exception.EmailException;
+import exception.LoginException;
 import utils.HelpUtils;
 
 import java.sql.ResultSet;
@@ -15,18 +17,30 @@ public class DBUsers_UI {
     }
 
     public void addInfo() {
+        System.out.println("Input data");
         User newUser = HelpUtils.getUser();
 
-        while (!db.addInfo(newUser)) {
-            System.out.println("User with such login or email already exists! Would you like to change the id?");
-            if (HelpUtils.getBool()) {
-                System.out.print("ID: ");
-                newProduct.setID(HelpUtils.getInt(1, Integer.MAX_VALUE));
-            } else return;
+        while (true){
+            try {
+                db.addInfo(newUser);
+                System.out.println("New data was added.");
+                return;
+            }
+            catch (LoginException e){
+                System.out.println("User with such login already exists! Would you like to change it?");
+                if (HelpUtils.getBool(false)) {
+                    System.out.print("Login: ");
+                    newUser.setLogin(HelpUtils.getString());
+                } else return;
+            }
+            catch(EmailException e){
+                System.out.println("User with such email already exists! Would you like to change it?");
+                if (HelpUtils.getBool(false)) {
+                    System.out.print("Email: ");
+                    newUser.setEmail(HelpUtils.getString());
+                } else return;
+            }
         }
-
-        if (!db.addInfo(newUser))
-            System.out.println("User wasn't added!");
     }
     public void printUsers() {
         ResultSet rs = db.getAllUsers();
