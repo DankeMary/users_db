@@ -112,11 +112,11 @@ public class DBUsers {
     }
 
     public ResultSet sortUsers(){
-        String query_id = "SELECT * FROM user ORDER BY `LAST_NAME`, 'NAME'";
+        String query_sort = "SELECT * FROM user ORDER BY `LAST_NAME`, 'NAME'";
         try {
             Statement st = conn.createStatement();
 
-            return st.executeQuery(query_id);
+            return st.executeQuery(query_sort);
         }
         catch(SQLException e) {
             // return null;
@@ -128,4 +128,16 @@ public class DBUsers {
     /*sort: (SELECT * FROM user ORDER BY `LAST_NAME`, 'NAME';
 
     */
+    public ResultSet getAllUsers(){
+        String query = "SELECT * FROM user";
+        try {
+            Statement st = conn.createStatement();
+
+            return st.executeQuery(query);
+        }
+        catch(SQLException e) {
+            // return null;
+        }
+        return null;
+    }
 }

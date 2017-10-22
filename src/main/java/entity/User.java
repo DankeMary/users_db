@@ -41,7 +41,7 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("ID: %d; First Name: %s; Last Name: %s; Login: %s; Email: %s", id, firstName, lastName, login, email);
+        return String.format("ID: %d / First Name: %s / Last Name: %s / Login: %s / Email: %s", id, firstName, lastName, login, email);
     }
 
     public Integer getId() {
