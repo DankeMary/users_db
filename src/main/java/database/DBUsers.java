@@ -3,8 +3,11 @@ package database;
 import entity.User;
 import exception.EmailException;
 import exception.LoginException;
+import utils.FileUtils;
 
+import java.io.IOException;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class DBUsers {
     private static final String URL = "jdbc:mysql://localhost:3306/users?useUnicode=true&useSSL=true&useJDBCCompliantTimezoneShift=true" +
@@ -175,5 +178,19 @@ public class DBUsers {
             // return null;
         }
         return null;
+    }
+
+    public boolean importInfo(String fileName) throws LoginException, EmailException{
+        try {
+            ArrayList<User> users = FileUtils.readFromCSV(fileName);
+            if (users != null)
+                for(User user : users){
+                    addInfo(user);
+                }
+            return true;
+        }
+        catch (IOException e) {
+            return false;
+        }
     }
 }

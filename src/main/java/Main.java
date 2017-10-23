@@ -41,7 +41,22 @@ public class Main {
         }
 */
         DBUsers_UI smth = new DBUsers_UI();
-        smth.start();
+        //smth.start();
+
+        String[] data = HelpUtils.getString().split(",");
+        for (String str: data) {
+            System.out.print(str + ' ');
+        }
+        System.out.println();
+        for(int i = 0; i < data.length; i++)
+            if (data[i].length() > 1)
+                data[i] = data[i].substring(1, data[i].length() - 1);
+
+        for (String str: data) {
+            System.out.print(str + " ;");
+        }
+        System.out.println();
+
         //smth.printUsers();
         //System.out.println();
         //smth.deleteSeveralUsers();
