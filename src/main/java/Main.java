@@ -41,15 +41,16 @@ public class Main {
         }
 */
         DBUsers_UI smth = new DBUsers_UI();
-        smth.printUsers();
-        System.out.println();
+        smth.start();
+        //smth.printUsers();
+        //System.out.println();
         //smth.deleteSeveralUsers();
         //smth.addUser();
        //smth.addUser();
-        smth.printUsers();
-        smth.filterUsers();
-        System.out.println();
-        smth.printUsers();
+       // smth.printUsers();
+       // smth.filterUsers();
+       // System.out.println();
+       // smth.printUsers();
 
         /*System.out.println(HelpUtils.getName());
         System.out.println(HelpUtils.getEmail());*/

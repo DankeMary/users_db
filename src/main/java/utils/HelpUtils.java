@@ -70,7 +70,7 @@ public class HelpUtils {
             if (str.equals(""))
                 LogUtils.printEmptyInputError();
             else
-                return str.trim();
+                return str.trim().toLowerCase();
         }
     }
 
@@ -81,7 +81,7 @@ public class HelpUtils {
             if (str.equals(""))
                 return basic;
             else
-                return str.trim();
+                return str.trim().toLowerCase();
         }
     }
 
@@ -91,7 +91,7 @@ public class HelpUtils {
             name = getString("").trim();
 
             if (checkName(name))
-                return name;
+                return name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase();
             else
                 LogUtils.printWrongInputCharsFormatMessage();
         }
@@ -103,7 +103,7 @@ public class HelpUtils {
             name = getString(basic).trim();
 
             if (checkName(name))
-                return name;
+                return name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase();
             else
                 LogUtils.printWrongInputCharsFormatMessage();
         }
@@ -115,7 +115,7 @@ public class HelpUtils {
             email = getString().trim();
 
             if (checkEmail(email))
-                return email;
+                return email.toLowerCase();
             else
                 LogUtils.printWrongInputFormatMessage();
         }
@@ -127,7 +127,7 @@ public class HelpUtils {
             email = getString(basic).trim();
 
             if (checkEmail(email))
-                return email;
+                return email.toLowerCase();
             else
                 LogUtils.printWrongInputFormatMessage();
         }
