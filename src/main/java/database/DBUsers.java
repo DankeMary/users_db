@@ -3,9 +3,12 @@ package database;
 import entity.User;
 import exception.EmailException;
 import exception.LoginException;
+import sun.applet.Main;
 import utils.FileUtils;
+import utils.HelpUtils;
 
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -181,16 +184,52 @@ public class DBUsers {
     }
 
     public boolean importInfo(String fileName) throws LoginException, EmailException{
-       // try {
-            /*ArrayList<User> users = FileUtils.readFromCSV(new File());
-            if (users != null)
-                for(User user : users){
-                    addInfo(user);
-                }*/
+        BufferedReader br = null;
+        String line = "";
+        String csvSplitBy = ",";
+        try{
+            ClassLoader classLoader = getClass().getClassLoader();
+            File file = new File(classLoader.getResource("data.csv").getFile());
+            br = new BufferedReader(new FileReader(file));
+            ArrayList<User> users = new ArrayList<User>();
+            User user = new User();
+
+            while ((line = br.readLine()) != null) {
+                String[] data = line.split(csvSplitBy);
+
+                System.out.println(line);
+                user.setFirstName(HelpUtils.formatString(data[0].trim()));
+                user.setLastName(HelpUtils.formatString(data[1].trim()));
+                user.setLogin(data[2].trim().toLowerCase());
+                user.setEmail(data[3].trim().toLowerCase());
+                users.add(user);
+            }
             return true;
-        //}
-        /*catch (IOException e) {
+        }
+        catch(FileNotFoundException e) {
             return false;
-        }*/
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        finally {
+            if (br != null)
+                try{
+                br.close();
+                }
+                catch(IOException e){}
+        }
+
+
+        /*} catch (FileNotFoundException e) {
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {*/
+
+
+
     }
 }

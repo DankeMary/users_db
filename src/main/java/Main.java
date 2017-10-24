@@ -53,14 +53,18 @@ public class Main {
         String str = "blabla";
         if (str.charAt(1)==('a'));
 
-       /* URL resource = Main.class.getResource("data.csv");
-        System.out.println(resource.getFile());
-        System.out.println(resource.getPath());
+        URL resource = Main.class.getResource("data.csv");
+        //System.out.println(resource.getFile());
+        //System.out.println(resource.getPath());
         File file = new File(URLDecoder.decode(resource.getFile()));
-        ArrayList<User> users = FileUtils.readFromCSV(file); //"src/files/data.csv"
+        FileUtils fu = new FileUtils();
+        ArrayList<User> users = fu.readFromCSV(file); //"src/files/data.csv"
            for(User u:users)
-               System.out.println(user);*/
-       System.out.println(FileUtils.getFileName("text.txt"));
+               System.out.println(user);
+
+
+
+       //System.out.println(FileUtils.getFileName("text.txt"));
 
       /* } catch(IOException e){
            System.out.println("Problems...");

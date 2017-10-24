@@ -62,7 +62,7 @@ public class HelpUtils {
     }
 
     public static String formatString(String str){
-        return str.substring(0,1).toUpperCase() + str.substring(1).toLowerCase();
+        return (str.equals(""))?str:str.substring(0,1).toUpperCase() + str.substring(1).toLowerCase();
     }
 
     public static String getString() {
