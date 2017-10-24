@@ -5,6 +5,7 @@ import entity.User;
 import java.util.Scanner;
 
 public class HelpUtils {
+    private static final String PROHIBITED_CHARS = "~#%&*{}*\\/:<>?+|";
     public static boolean isInRange(int num, int min, int max) {
         return (num >= min && num <= max);
     }
@@ -58,7 +59,10 @@ public class HelpUtils {
     }
 
     public static boolean checkEmail(String email) {
-        return (email.indexOf('@') != -1 && email.indexOf('.') != -1 && countMatches(email, '@') == 1);
+        return (email.length() <= 30 && email.indexOf('@') != -1 && email.indexOf('.') != -1 && countMatches(email, '@') == 1 && email.indexOf(' ') == -1);
+    }
+    public static boolean checkLogin(String login) {
+        return (login.length() <= 30 && login.indexOf(' ') == -1);
     }
 
     public static String formatString(String str){
@@ -137,6 +141,15 @@ public class HelpUtils {
         }
     }
 
+    public static String getFileName(String basic){
+        String fileName = HelpUtils.getString(basic);
+        if (/*fileName.charAt(0) == '_' || */fileName.charAt(0) == '.')
+            return null;
+        for(int i = 0; i < fileName.length(); i++)
+            if (PROHIBITED_CHARS.contains(fileName.substring(i,i + 1)))
+                return null;
+        return fileName;
+    }
      public static boolean getBool(boolean basic) {
         Scanner in = new Scanner(System.in);
         String str = in.nextLine().trim();

@@ -3,12 +3,9 @@ package database;
 import entity.User;
 import exception.EmailException;
 import exception.LoginException;
-import sun.applet.Main;
-import utils.FileUtils;
 import utils.HelpUtils;
 
 import java.io.*;
-import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -183,26 +180,33 @@ public class DBUsers {
         return null;
     }
 
-    public boolean importInfo(String fileName) throws LoginException, EmailException{
+    public boolean importInfo(String fileName){
         BufferedReader br = null;
         String line = "";
         String csvSplitBy = ",";
         try{
             ClassLoader classLoader = getClass().getClassLoader();
-            File file = new File(classLoader.getResource("data.csv").getFile());
+            File file = new File(classLoader.getResource(fileName).getFile());
             br = new BufferedReader(new FileReader(file));
             ArrayList<User> users = new ArrayList<User>();
             User user = new User();
 
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(csvSplitBy);
+                try {
+                    System.out.println(line);
+                    user.setFirstName(HelpUtils.formatString(data[0].trim()));
+                    user.setLastName(HelpUtils.formatString(data[1].trim()));
+                    if (HelpUtils.checkLogin(data[2].trim()))
+                        user.setLogin(data[2].trim().toLowerCase());
+                    else continue;
+                    if (HelpUtils.checkEmail(data[3].trim()))
+                        user.setEmail(data[3].trim().toLowerCase());
+                    else continue;
 
-                System.out.println(line);
-                user.setFirstName(HelpUtils.formatString(data[0].trim()));
-                user.setLastName(HelpUtils.formatString(data[1].trim()));
-                user.setLogin(data[2].trim().toLowerCase());
-                user.setEmail(data[3].trim().toLowerCase());
-                users.add(user);
+                    addInfo(user);
+                } catch (LoginException e) {}
+                catch (EmailException e) {}
             }
             return true;
         }
@@ -210,26 +214,56 @@ public class DBUsers {
             return false;
         }
         catch (IOException e) {
-            e.printStackTrace();
             return false;
         }
         finally {
             if (br != null)
                 try{
-                br.close();
+                    br.close();
                 }
                 catch(IOException e){}
         }
+    }
+
+    public boolean exportInfo(String fileName){
+        try {
+            //ClassLoader classLoader = getClass().getClassLoader();
+           // File file = new File(classLoader.getResource(fileName).getFile());
+        /*try {
+            if(file.exists() && !file.isDirectory()) {
+                // do something
+            } else {
+                FileWriter writer = new FileWriter(fileName);
+
+            }
+        } //catch (FileNotFoundException e) {}
+        catch (IOException e) {}*/
+            /*try {
+                FileWriter writer = new FileWriter(fileName);
+                StringBuilder sb = new StringBuilder();
 
 
-        /*} catch (FileNotFoundException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+            }*/
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {*/
+            PrintWriter pw = new PrintWriter(fileName);
+            StringBuilder sb = new StringBuilder();
+            ResultSet rs = getAllUsers();
+            try {
+                while (rs.next()) {
+                    rs.getInt(1);
+                    sb.append(rs.getString(2) + ',');
+                    sb.append(rs.getString(3) + ',');
+                    sb.append(rs.getString(4) + ',');
+                    sb.append(rs.getString(5));
+                    sb.append('\n');
+                    pw.write(sb.toString());
+                    sb.setLength(0);
+                }
+            } catch (SQLException e) {}
+            finally {pw.close();}
+        } catch (FileNotFoundException e) {return false;}
 
-
-
+        return true;
     }
 }

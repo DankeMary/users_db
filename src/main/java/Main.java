@@ -1,10 +1,10 @@
 import entity.User;
-import utils.FileUtils;
-import utils.HelpUtils;
 import view.DBUsers_UI;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.sql.*;
@@ -49,18 +49,32 @@ public class Main {
 */
         DBUsers_UI smth = new DBUsers_UI();
         //smth.start();
+        smth.saveToFile();
        //try{
         String str = "blabla";
         if (str.charAt(1)==('a'));
 
-        URL resource = Main.class.getResource("data.csv");
+
+
+        /*BufferedReader br = null;
+        String line = "";
+        String cvsSplitBy = ",";
+
+        try {
+
+            br = new BufferedReader(new FileReader("data.csv"));
+
+        } catch(FileNotFoundException e) {System.out.println("not found");}*/
+
+        //URL resource = Main.class.getResource("data.csv");
         //System.out.println(resource.getFile());
         //System.out.println(resource.getPath());
-        File file = new File(URLDecoder.decode(resource.getFile()));
-        FileUtils fu = new FileUtils();
-        ArrayList<User> users = fu.readFromCSV(file); //"src/files/data.csv"
-           for(User u:users)
-               System.out.println(user);
+        //File file = new File(URLDecoder.decode(resource.getFile()));
+        //FileUtils fu = new FileUtils();
+        ///DBUsers_UI.readFromFile(); //"src/files/data.csv"
+
+           /*for(User u:users)
+               System.out.println(user);*/
 
 
 

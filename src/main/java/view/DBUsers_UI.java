@@ -4,16 +4,12 @@ import database.DBUsers;
 import entity.User;
 import exception.EmailException;
 import exception.LoginException;
-import utils.FileUtils;
 import utils.HelpUtils;
 import utils.LogUtils;
 import utils.MenuUtils;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Scanner;
 
 public class DBUsers_UI {
@@ -51,7 +47,7 @@ public class DBUsers_UI {
                     filterUsers();
                     break;
                 case 8:
-                    //readFromFile();
+                    readFromFile();
                     break;
                 case 9:
                     saveToFile();
@@ -205,24 +201,21 @@ public class DBUsers_UI {
         }
     }
 
-    /*private static void readFromFile(){
+    public static void readFromFile(){
         System.out.println("Input filename (default - data.csv");
-        String fileName = FileUtils.getFileName("data.csv");
+        String fileName = HelpUtils.getFileName("data.csv");
         if (fileName == null)
             System.out.println("Filename has prohibited chars!");
         else {
-            try {
-                List<User> users = FileUtils.readFromCSV(fileName);
-            } catch (FileNotFoundException e) {
-                System.out.println("File with such name doesn't exist!");
-            } catch (IOException e) {
-                System.out.println("Couldn't open the file!");
-            }
+            if (db.importInfo(fileName))
+                System.out.println("Data from file was uploaded");
+            else
+                System.out.println("File with such name wasn't found!");
 
         }
-    }*/
+    }
 
-    private static void saveToFile(){}
+    public  static void saveToFile(){ db.exportInfo("test.csv");}
 
     private static void printUsers() {
         ResultSet rs = db.getAllUsers();
