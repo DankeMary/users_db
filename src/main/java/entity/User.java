@@ -1,7 +1,5 @@
 package entity;
 
-import java.util.Formatter;
-
 public class User {
     private Integer id;
     private String firstName;
@@ -9,9 +7,7 @@ public class User {
     private String login;
     private String email;
 
-    public User() {
-
-    }
+    public User() { }
 
     public User(int id, String login, String email) {
         this.id = id;

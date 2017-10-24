@@ -8,6 +8,8 @@ import utils.HelpUtils;
 import java.io.*;
 import java.sql.*;
 
+
+//todo:     CLOSING CONNECTIONS (when)
 /*
     String query_id = "SELECT * FROM user WHERE ID =" + id;
 
@@ -24,12 +26,10 @@ public class DBUsers {
 
     private static Connection conn;
 
-    public DBUsers() {
+    public DBUsers() throws SQLException{
         try {
             conn = DriverManager.getConnection(URL, user, password);
-        } catch (SQLException sqlEx) {
-            sqlEx.printStackTrace();
-        }
+        }catch (SQLException e) {System.out.println("loh");}
     }
 
     private boolean infoExists(String query) {
@@ -48,12 +48,12 @@ public class DBUsers {
         return infoExists("SELECT * FROM user WHERE EMAIL='" + email + "'");
     }
 
-    public boolean loginlExists(String login) {
+    public boolean loginExists(String login) {
         return infoExists("SELECT * FROM user WHERE LOGIN='" + login + "'");
     }
 
     //todo: how to deal with exceptions???
-    public void addInfo(User user) throws LoginException, EmailException { //todo: is THROWS needed here?
+    public void addInfo(User user) throws LoginException, EmailException {
         if (infoExists("SELECT * FROM user WHERE LOGIN='" + user.getLogin() + "'"))
             throw new LoginException();
         else if (infoExists("SELECT * FROM user WHERE EMAIL='" + user.getEmail() + "'"))
@@ -192,9 +192,8 @@ public class DBUsers {
                     else continue;
 
                     addInfo(user);
-                } catch (LoginException e) {
-                } catch (EmailException e) {
-                }
+                } catch (LoginException e) {}
+                  catch (EmailException e) {}
             }
             return true;
         } catch (FileNotFoundException e) {

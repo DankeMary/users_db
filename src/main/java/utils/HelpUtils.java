@@ -1,7 +1,6 @@
 package utils;
 
 import entity.User;
-
 import java.util.Scanner;
 
 public class HelpUtils {
@@ -60,7 +59,8 @@ public class HelpUtils {
     }
 
     public static boolean checkEmail(String email) {
-        return (email.length() <= 30 && email.indexOf('@') != -1 && email.indexOf('.') != -1 && countMatches(email, '@') == 1 && email.indexOf(' ') == -1);
+        return (email.length() <= 30 && email.indexOf('@') != -1 && email.indexOf('.') != -1
+                && countMatches(email, '@') == 1 && email.indexOf(' ') == -1);
     }
 
     public static boolean checkLogin(String login) {
@@ -94,7 +94,7 @@ public class HelpUtils {
                 return str.trim().toLowerCase();
         }
     }
-
+/*
     public static String getName() {
         String name;
         while (true) {
@@ -105,7 +105,7 @@ public class HelpUtils {
             else
                 LogUtils.printWrongInputCharsFormatMessage();
         }
-    }
+    }*/
 
     public static String getName(String basic) {
         String name;
@@ -142,7 +142,7 @@ public class HelpUtils {
                 LogUtils.printWrongInputFormatMessage();
         }
     }
-
+    //todo: !!!!!!!!!! filename chars
     public static String getFileName(String basic) {
         String fileName = HelpUtils.getString(basic);
         if (/*fileName.charAt(0) == '_' || */fileName.charAt(0) == '.')
@@ -161,8 +161,6 @@ public class HelpUtils {
         } else
             return (str.equals("+") || str.equals("yes") || str.equals("y"));
     }
-//todo:!!!!!
-    //public static String getFileName(){ return null;}
 
     public static User getUser() {
         User aUser = new User();

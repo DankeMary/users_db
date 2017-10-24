@@ -15,48 +15,48 @@ import java.util.Scanner;
 public class DBUsers_UI {
     private static DBUsers db;
 
-    public DBUsers_UI() {
-        db = new DBUsers();
-    }
-
     public static void start() {
-        int choice = 1;
-        while (choice != 0) {
-            MenuUtils.printMainMenu();
-            choice = MenuUtils.getMenuItem(0, 7);
-            switch (choice) {
-                case 1:
-                    addUser();
-                    break;
-                case 2:
-                    editUser();
-                    break;
-                case 3:
-                    deleteUser();
-                    break;
-                case 4:
-                    deleteSeveralUsers();
-                    break;
-                case 5:
-                    printUsers();
-                    break;
-                case 6:
-                    sortUsers();
-                    break;
-                case 7:
-                    filterUsers();
-                    break;
-                case 8:
-                    readFromFile();
-                    break;
-                case 9:
-                    saveToFile();
-                    break;
-                case 0:
-                default:
-                    break;
+        try {
+            db = new DBUsers();
+
+            int choice = 1;
+            while (choice != 0) {
+                MenuUtils.printMainMenu();
+                choice = MenuUtils.getMenuItem(0, 8);
+                switch (choice) {
+                    case 1:
+                        addUser();
+                        break;
+                    case 2:
+                        editUser();
+                        break;
+                    case 3:
+                        deleteUser();
+                        break;
+                    case 4:
+                        deleteSeveralUsers();
+                        break;
+                    case 5:
+                        printUsers();
+                        break;
+                    case 6:
+                        sortUsers();
+                        break;
+                    case 7:
+                        filterUsers();
+                        break;
+                    case 8:
+                        readFromFile();
+                        break;
+                    case 9:
+                        saveToFile();
+                        break;
+                    case 0:
+                    default:
+                        break;
+                }
             }
-        }
+        } catch (SQLException e) { System.out.println("Couldn't connect to database");}
     }
 
     private static void addUser() {
@@ -100,7 +100,7 @@ public class DBUsers_UI {
         HelpUtils.getUser(user);
 
         while (true) {
-            if (db.loginlExists(user.getLogin())) {
+            if (db.loginExists(user.getLogin())) {
                 System.out.println("User with such login already exists! Change the login");
                 System.out.print("Login: ");
                 user.setLogin(HelpUtils.getString());
