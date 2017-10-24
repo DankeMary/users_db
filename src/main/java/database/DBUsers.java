@@ -181,16 +181,16 @@ public class DBUsers {
     }
 
     public boolean importInfo(String fileName) throws LoginException, EmailException{
-        try {
-            ArrayList<User> users = FileUtils.readFromCSV(fileName);
+       // try {
+            /*ArrayList<User> users = FileUtils.readFromCSV(new File());
             if (users != null)
                 for(User user : users){
                     addInfo(user);
-                }
+                }*/
             return true;
-        }
-        catch (IOException e) {
+        //}
+        /*catch (IOException e) {
             return false;
-        }
+        }*/
     }
 }

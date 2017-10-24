@@ -1,7 +1,14 @@
+import entity.User;
+import utils.FileUtils;
 import utils.HelpUtils;
 import view.DBUsers_UI;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Main {
     private static Connection conn;
@@ -42,8 +49,19 @@ public class Main {
 */
         DBUsers_UI smth = new DBUsers_UI();
         //smth.start();
+       //try{
+        URL resource = Main.class.getResource("data.csv");
+        System.out.println(resource.getFile());
+        System.out.println(resource.getPath());
+        File file = new File(URLDecoder.decode(resource.getFile()));
+        ArrayList<User> users = FileUtils.readFromCSV(file); //"src/files/data.csv"
+           for(User u:users)
+               System.out.println(user);
+      /* } catch(IOException e){
+           System.out.println("Problems...");
+       }*/
 
-        String[] data = HelpUtils.getString().split(",");
+        /*String[] data = HelpUtils.getString().split(",");
         for (String str: data) {
             System.out.print(str + ' ');
         }
@@ -55,7 +73,7 @@ public class Main {
         for (String str: data) {
             System.out.print(str + " ;");
         }
-        System.out.println();
+        System.out.println();*/
 
         //smth.printUsers();
         //System.out.println();

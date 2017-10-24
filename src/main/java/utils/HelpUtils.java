@@ -61,6 +61,10 @@ public class HelpUtils {
         return (email.indexOf('@') != -1 && email.indexOf('.') != -1 && countMatches(email, '@') == 1);
     }
 
+    public static String formatString(String str){
+        return str.substring(0,1).toUpperCase() + str.substring(1).toLowerCase();
+    }
+
     public static String getString() {
         Scanner in = new Scanner(System.in);
 
@@ -91,7 +95,7 @@ public class HelpUtils {
             name = getString("").trim();
 
             if (checkName(name))
-                return name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase();
+                return formatString(name);
             else
                 LogUtils.printWrongInputCharsFormatMessage();
         }
@@ -103,7 +107,7 @@ public class HelpUtils {
             name = getString(basic).trim();
 
             if (checkName(name))
-                return name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase();
+                return formatString(name);
             else
                 LogUtils.printWrongInputCharsFormatMessage();
         }
