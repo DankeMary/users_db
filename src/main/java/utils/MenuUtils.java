@@ -4,12 +4,12 @@ package utils;
 //Sort by Last name
 //Changes by ID
 public class MenuUtils {
-    public static int getMenuItem(int min, int max){
+    public static int getMenuItem(int min, int max) {
         System.out.print("Item: ");
         return HelpUtils.getInt(min, max);
     }
 
-    public static void printMainMenu(){
+    public static void printMainMenu() {
         System.out.println("\n----Main  menu----");
         System.out.println("1 - Add new user info");
         System.out.println("2 - Edit user info");

@@ -48,11 +48,10 @@ public class Main {
         }
 */
         DBUsers_UI smth = new DBUsers_UI();
-        //smth.start();
-        smth.saveToFile();
-       //try{
+        smth.start();
+       /*try{
         String str = "blabla";
-        if (str.charAt(1)==('a'));
+        if (str.charAt(1)==('a'));*/
 
 
 
@@ -77,8 +76,7 @@ public class Main {
                System.out.println(user);*/
 
 
-
-       //System.out.println(FileUtils.getFileName("text.txt"));
+        //System.out.println(FileUtils.getFileName("text.txt"));
 
       /* } catch(IOException e){
            System.out.println("Problems...");
@@ -102,11 +100,11 @@ public class Main {
         //System.out.println();
         //smth.deleteSeveralUsers();
         //smth.addUser();
-       //smth.addUser();
-       // smth.printUsers();
-       // smth.filterUsers();
-       // System.out.println();
-       // smth.printUsers();
+        //smth.addUser();
+        // smth.printUsers();
+        // smth.filterUsers();
+        // System.out.println();
+        // smth.printUsers();
 
         /*System.out.println(HelpUtils.getName());
         System.out.println(HelpUtils.getEmail());*/

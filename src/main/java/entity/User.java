@@ -13,18 +13,18 @@ public class User {
 
     }
 
-    public User (int id, String login, String email){
+    public User(int id, String login, String email) {
         this.id = id;
         this.login = login;
         this.email = email;
     }
 
-    public User (String login, String email){
+    public User(String login, String email) {
         this.login = login;
         this.email = email;
     }
 
-    public User (int id, String firstName, String lastName, String login, String email){
+    public User(int id, String firstName, String lastName, String login, String email) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -32,7 +32,7 @@ public class User {
         this.email = email;
     }
 
-    public User (String firstName, String lastName, String login, String email){
+    public User(String firstName, String lastName, String login, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.login = login;
@@ -83,7 +83,6 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
-
 
 
 }

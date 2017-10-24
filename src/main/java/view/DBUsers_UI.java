@@ -15,11 +15,11 @@ import java.util.Scanner;
 public class DBUsers_UI {
     private static DBUsers db;
 
-    public DBUsers_UI(){
+    public DBUsers_UI() {
         db = new DBUsers();
     }
 
-    public static void start(){
+    public static void start() {
         int choice = 1;
         while (choice != 0) {
             MenuUtils.printMainMenu();
@@ -58,24 +58,23 @@ public class DBUsers_UI {
             }
         }
     }
+
     private static void addUser() {
         System.out.println("Input data");
         User newUser = HelpUtils.getUser();
 
-        while (true){
+        while (true) {
             try {
                 db.addInfo(newUser);
                 System.out.println("New data was added.");
                 return;
-            }
-            catch (LoginException e){
+            } catch (LoginException e) {
                 System.out.println("User with such login already exists! Would you like to change it?");
                 if (HelpUtils.getBool(false)) {
                     System.out.print("Login: ");
                     newUser.setLogin(HelpUtils.getString());
                 } else return;
-            }
-            catch(EmailException e){
+            } catch (EmailException e) {
                 System.out.println("User with such email already exists! Would you like to change it?");
                 if (HelpUtils.getBool(false)) {
                     System.out.print("Email: ");
@@ -85,7 +84,7 @@ public class DBUsers_UI {
         }
     }
 
-    private static void editUser(){
+    private static void editUser() {
         if (db.isEmpty()) {
             System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
             return;
@@ -94,20 +93,20 @@ public class DBUsers_UI {
         LogUtils.printInputIDForActionMessage("edit");
         int userID = HelpUtils.getInt(1, Integer.MAX_VALUE);
         User user = db.getUserByID(userID);
-        if (user == null){
+        if (user == null) {
             System.out.println("User with such ID wasn't found"); //LogUtils.printItemNotFoundMessage(userID);
             return;
         }
         HelpUtils.getUser(user);
 
-        while(true) {
-            if (db.loginlExists(user.getLogin())){
+        while (true) {
+            if (db.loginlExists(user.getLogin())) {
                 System.out.println("User with such login already exists! Change the login");
                 System.out.print("Login: ");
                 user.setLogin(HelpUtils.getString());
                 continue;
             }
-            if (db.emailExists(user.getEmail())){
+            if (db.emailExists(user.getEmail())) {
                 System.out.println("User with such email already exists! Change the email");
                 System.out.print("Email: ");
                 user.setEmail(HelpUtils.getEmail());
@@ -119,7 +118,7 @@ public class DBUsers_UI {
         LogUtils.printActionResult(userID, "edited");
     }
 
-    private static void deleteUser(){
+    private static void deleteUser() {
         if (db.isEmpty()) {
             System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
             return;
@@ -135,6 +134,7 @@ public class DBUsers_UI {
         else
             LogUtils.printItemNotFoundMessage(userID);
     }
+
     private static void deleteUser(String id) {
         try {
             int itemID = Integer.parseInt(id);
@@ -172,14 +172,15 @@ public class DBUsers_UI {
         }
     }
 
-    private static void sortUsers(){
+    private static void sortUsers() {
         if (db.isEmpty()) {
             System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
             return;
         }
         printUsers(db.sortUsers());
     }
-    private static void filterUsers(){
+
+    private static void filterUsers() {
         if (db.isEmpty())
             LogUtils.printEmptyListMessage();
         else {
@@ -191,7 +192,7 @@ public class DBUsers_UI {
             System.out.print("Input the criterion string: ");
             String criterionStr = HelpUtils.getString();
             String query;
-            if(criterion == 1)
+            if (criterion == 1)
                 query = criterionStr + "%";
             else
                 query = "%" + criterionStr;
@@ -201,7 +202,7 @@ public class DBUsers_UI {
         }
     }
 
-    public static void readFromFile(){
+    public static void readFromFile() {
         System.out.println("Input filename (default - data.csv");
         String fileName = HelpUtils.getFileName("data.csv");
         if (fileName == null)
@@ -211,34 +212,44 @@ public class DBUsers_UI {
                 System.out.println("Data from file was uploaded");
             else
                 System.out.println("File with such name wasn't found!");
-
         }
     }
 
-    public  static void saveToFile(){ db.exportInfo("test.csv");}
+    public static void saveToFile() {
+        System.out.println("Input filename (default - test.csv)");
+        String fileName = HelpUtils.getFileName("test.csv");
+        if (fileName == null)
+            System.out.println("Filename has prohibited chars!");
+        else {
+            if (db.exportInfo(fileName))
+                System.out.println("Data from database was saved to file " + fileName);
+            else ;
+            //todo: !!!System.out.println("File with such name wasn't found!");
+        }
+    }
 
     private static void printUsers() {
         ResultSet rs = db.getAllUsers();
         printUsers(rs);
     }
 
-    private static void printUsers(ResultSet rs){
+    private static void printUsers(ResultSet rs) {
         try {
             if (!rs.next())
                 System.out.println("No data was found");
             else {
                 rs.beforeFirst();
                 while (rs.next()) {
-                User user = new User(); //todo: is it needed?
-                user.setId(rs.getInt(1));
-                user.setFirstName(rs.getString(2));
-                user.setLastName(rs.getString(3));
-                user.setLogin(rs.getString(4));
-                user.setEmail(rs.getString(5));
-                System.out.println(user);
+                    User user = new User(); //todo: is it needed?
+                    user.setId(rs.getInt(1));
+                    user.setFirstName(rs.getString(2));
+                    user.setLastName(rs.getString(3));
+                    user.setLogin(rs.getString(4));
+                    user.setEmail(rs.getString(5));
+                    System.out.println(user);
+                }
             }
-            }
+        } catch (SQLException e) {
         }
-        catch(SQLException e) {}
     }
 }

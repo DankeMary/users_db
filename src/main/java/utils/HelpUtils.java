@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class HelpUtils {
     private static final String PROHIBITED_CHARS = "~#%&*{}*\\/:<>?+|";
+
     public static boolean isInRange(int num, int min, int max) {
         return (num >= min && num <= max);
     }
@@ -61,12 +62,13 @@ public class HelpUtils {
     public static boolean checkEmail(String email) {
         return (email.length() <= 30 && email.indexOf('@') != -1 && email.indexOf('.') != -1 && countMatches(email, '@') == 1 && email.indexOf(' ') == -1);
     }
+
     public static boolean checkLogin(String login) {
         return (login.length() <= 30 && login.indexOf(' ') == -1);
     }
 
-    public static String formatString(String str){
-        return (str.equals(""))?str:str.substring(0,1).toUpperCase() + str.substring(1).toLowerCase();
+    public static String formatString(String str) {
+        return (str.equals("")) ? str : str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
     }
 
     public static String getString() {
@@ -93,9 +95,9 @@ public class HelpUtils {
         }
     }
 
-    public static String getName(){
+    public static String getName() {
         String name;
-        while(true){
+        while (true) {
             name = getString("").trim();
 
             if (checkName(name))
@@ -105,9 +107,9 @@ public class HelpUtils {
         }
     }
 
-    public static String getName(String basic){
+    public static String getName(String basic) {
         String name;
-        while(true){
+        while (true) {
             name = getString(basic).trim();
 
             if (checkName(name))
@@ -117,9 +119,9 @@ public class HelpUtils {
         }
     }
 
-    public static String getEmail(){
+    public static String getEmail() {
         String email;
-        while(true){
+        while (true) {
             email = getString().trim();
 
             if (checkEmail(email))
@@ -129,9 +131,9 @@ public class HelpUtils {
         }
     }
 
-    public static String getEmail(String basic){
+    public static String getEmail(String basic) {
         String email;
-        while(true){
+        while (true) {
             email = getString(basic).trim();
 
             if (checkEmail(email))
@@ -141,16 +143,17 @@ public class HelpUtils {
         }
     }
 
-    public static String getFileName(String basic){
+    public static String getFileName(String basic) {
         String fileName = HelpUtils.getString(basic);
         if (/*fileName.charAt(0) == '_' || */fileName.charAt(0) == '.')
             return null;
-        for(int i = 0; i < fileName.length(); i++)
-            if (PROHIBITED_CHARS.contains(fileName.substring(i,i + 1)))
+        for (int i = 0; i < fileName.length(); i++)
+            if (PROHIBITED_CHARS.contains(fileName.substring(i, i + 1)))
                 return null;
         return fileName;
     }
-     public static boolean getBool(boolean basic) {
+
+    public static boolean getBool(boolean basic) {
         Scanner in = new Scanner(System.in);
         String str = in.nextLine().trim();
         if (str.equals("")) {
@@ -161,7 +164,7 @@ public class HelpUtils {
 //todo:!!!!!
     //public static String getFileName(){ return null;}
 
-    public static User getUser(){
+    public static User getUser() {
         User aUser = new User();
         System.out.print("First Name: ");
         aUser.setFirstName(getName(""));
@@ -177,7 +180,7 @@ public class HelpUtils {
         return aUser;
     }
 
-    public static void getUser(User basic){
+    public static void getUser(User basic) {
         System.out.print("First Name: ");
         basic.setFirstName(getName(basic.getFirstName()));
 
