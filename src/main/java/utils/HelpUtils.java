@@ -145,8 +145,7 @@ public class HelpUtils {
     //todo: !!!!!!!!!! filename chars
     public static String getFileName(String basic) {
         String fileName = HelpUtils.getString(basic);
-        if (/*fileName.charAt(0) == '_' || */fileName.charAt(0) == '.')
-            return null;
+
         for (int i = 0; i < fileName.length(); i++)
             if (PROHIBITED_CHARS.contains(fileName.substring(i, i + 1)))
                 return null;

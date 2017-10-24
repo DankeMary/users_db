@@ -29,9 +29,10 @@ public class DBUsers {
     public DBUsers() throws SQLException{
         try {
             conn = DriverManager.getConnection(URL, user, password);
-        }catch (SQLException e) {System.out.println("loh");}
+        }catch (SQLException e) {/*error trying to access db*/ }
     }
 
+    //disconnect conn close
     private boolean infoExists(String query) {
         try {
             Statement st = conn.createStatement();
@@ -40,7 +41,7 @@ public class DBUsers {
             return (rs.next());
         } catch (SQLException e) {
             //return false;
-        }
+        }finally { /*close resset -> statement*/}
         return false;
     }
     public int countDuplicates (int id, String query) {
