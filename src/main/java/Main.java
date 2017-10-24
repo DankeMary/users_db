@@ -50,13 +50,18 @@ public class Main {
         DBUsers_UI smth = new DBUsers_UI();
         //smth.start();
        //try{
-        URL resource = Main.class.getResource("data.csv");
+        String str = "blabla";
+        if (str.charAt(1)==('a'));
+
+       /* URL resource = Main.class.getResource("data.csv");
         System.out.println(resource.getFile());
         System.out.println(resource.getPath());
         File file = new File(URLDecoder.decode(resource.getFile()));
         ArrayList<User> users = FileUtils.readFromCSV(file); //"src/files/data.csv"
            for(User u:users)
-               System.out.println(user);
+               System.out.println(user);*/
+       System.out.println(FileUtils.getFileName("text.txt"));
+
       /* } catch(IOException e){
            System.out.println("Problems...");
        }*/

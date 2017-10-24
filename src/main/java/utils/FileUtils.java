@@ -8,6 +8,16 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 
 public class FileUtils {
+    private static final String PROHIBITED_CHARS = "~#%&*{}*\\/:<>?+|";
+    public static String getFileName(String basic){
+        String fileName = HelpUtils.getString(basic);
+        if (/*fileName.charAt(0) == '_' || */fileName.charAt(0) == '.')
+            return null;
+        for(int i = 0; i < fileName.length(); i++)
+            if (PROHIBITED_CHARS.contains(fileName.substring(i,i + 1)))
+                return null;
+        return fileName;
+    }
     /*public static User[] readFromCSV(){
         String csvFile = "/Users/mkyong/csv/country.csv";
         String line = "";
