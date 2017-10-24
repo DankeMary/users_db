@@ -51,7 +51,7 @@ public class HelpUtils {
         char[] chars = str.toCharArray();
 
         for (char c : chars) {
-            if (!Character.isLetter(c)) {
+            if (!Character.isLetter(c) && c != ' ' && c != '-') {
                 return false;
             }
         }

@@ -19,6 +19,7 @@ public class MenuUtils {
         System.out.println("6 - Sort users by login");
         System.out.println("7 - Filter users by email");
         System.out.println("8 - Upload from file");
+        System.out.println("9 - Save file");
         System.out.println("0 - Go to Main Menu");
         System.out.println("------------------");
     }

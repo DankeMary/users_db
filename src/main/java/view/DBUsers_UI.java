@@ -22,7 +22,7 @@ public class DBUsers_UI {
             int choice = 1;
             while (choice != 0) {
                 MenuUtils.printMainMenu();
-                choice = MenuUtils.getMenuItem(0, 8);
+                choice = MenuUtils.getMenuItem(0, 9);
                 switch (choice) {
                     case 1:
                         addUser();
@@ -56,7 +56,9 @@ public class DBUsers_UI {
                         break;
                 }
             }
-        } catch (SQLException e) { System.out.println("Couldn't connect to database");}
+        } catch (SQLException e) {
+            System.out.println("Couldn't connect to database");
+        }
     }
 
     private static void addUser() {
@@ -86,7 +88,7 @@ public class DBUsers_UI {
 
     private static void editUser() {
         if (db.isEmpty()) {
-            System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
+            LogUtils.printEmptyDBMessage();
             return;
         }
 
@@ -100,13 +102,13 @@ public class DBUsers_UI {
         HelpUtils.getUser(user);
 
         while (true) {
-            if (db.loginExists(user.getLogin())) {
+            if (db.loginExists(user.getId(), user.getLogin()) > 0) {
                 System.out.println("User with such login already exists! Change the login");
                 System.out.print("Login: ");
                 user.setLogin(HelpUtils.getString());
                 continue;
             }
-            if (db.emailExists(user.getEmail())) {
+            if (db.emailExists(user.getId(), user.getEmail()) > 0) {
                 System.out.println("User with such email already exists! Change the email");
                 System.out.print("Email: ");
                 user.setEmail(HelpUtils.getEmail());
@@ -120,7 +122,7 @@ public class DBUsers_UI {
 
     private static void deleteUser() {
         if (db.isEmpty()) {
-            System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
+            LogUtils.printEmptyDBMessage();
             return;
         }
         System.out.println("Print the list?");
@@ -150,7 +152,7 @@ public class DBUsers_UI {
 
     private static void deleteSeveralUsers() {
         if (db.isEmpty()) {
-            System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
+            LogUtils.printEmptyDBMessage();
             return;
         }
         System.out.println("Print the list?");
@@ -174,36 +176,37 @@ public class DBUsers_UI {
 
     private static void sortUsers() {
         if (db.isEmpty()) {
-            System.out.println("Database is empty");//LogUtils.printEmptyListMessage();
+            LogUtils.printEmptyDBMessage();
             return;
         }
         printUsers(db.sortUsers());
     }
 
     private static void filterUsers() {
-        if (db.isEmpty())
-            LogUtils.printEmptyListMessage();
-        else {
-            MenuUtils.printFilterCriteria();
-            int criterion = MenuUtils.getMenuItem(0, 2);
-            if (criterion == 0)
-                return;
-
-            System.out.print("Input the criterion string: ");
-            String criterionStr = HelpUtils.getString();
-            String query;
-            if (criterion == 1)
-                query = criterionStr + "%";
-            else
-                query = "%" + criterionStr;
-
-            ResultSet res = db.filterUsers(query);
-            printUsers(res);
+        if (db.isEmpty()) {
+            LogUtils.printEmptyDBMessage();
+            return;
         }
+        MenuUtils.printFilterCriteria();
+        int criterion = MenuUtils.getMenuItem(0, 2);
+        if (criterion == 0)
+            return;
+
+        System.out.print("Input the criterion string: ");
+        String criterionStr = HelpUtils.getString();
+        String query;
+        if (criterion == 1)
+            query = criterionStr + "%";
+        else
+            query = "%" + criterionStr;
+
+        ResultSet res = db.filterUsers(query);
+        printUsers(res);
+
     }
 
     public static void readFromFile() {
-        System.out.println("Input filename (default - data.csv");
+        System.out.println("Input filename (default - data.csv)");
         String fileName = HelpUtils.getFileName("data.csv");
         if (fileName == null)
             System.out.println("Filename has prohibited chars!");
@@ -216,6 +219,11 @@ public class DBUsers_UI {
     }
 
     public static void saveToFile() {
+        if (db.isEmpty()) {
+            LogUtils.printEmptyDBMessage();
+            return;
+        }
+
         System.out.println("Input filename (default - test.csv)");
         String fileName = HelpUtils.getFileName("test.csv");
         if (fileName == null)
@@ -226,6 +234,7 @@ public class DBUsers_UI {
             else ;
             //todo: !!!System.out.println("File with such name wasn't found!");
         }
+
     }
 
     private static void printUsers() {
@@ -236,7 +245,7 @@ public class DBUsers_UI {
     private static void printUsers(ResultSet rs) {
         try {
             if (!rs.next())
-                System.out.println("No data was found");
+                LogUtils.printEmptyDBMessage();
             else {
                 rs.beforeFirst();
                 while (rs.next()) {

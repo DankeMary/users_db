@@ -43,13 +43,36 @@ public class DBUsers {
         }
         return false;
     }
+    public int countDuplicates (int id, String query) {
+        int cnt = 0;
+        try {
+            Statement st = conn.createStatement();
 
-    public boolean emailExists(String email) {
+            ResultSet rs = st.executeQuery(query);
+            while (rs.next())
+                if (rs.getInt(1) != id)
+                    cnt++;
+            return cnt;
+        } catch (SQLException e) {
+            //return false;
+            return 0;
+        }
+    }
+
+   /* public boolean emailExists(String email) {
         return infoExists("SELECT * FROM user WHERE EMAIL='" + email + "'");
     }
 
     public boolean loginExists(String login) {
         return infoExists("SELECT * FROM user WHERE LOGIN='" + login + "'");
+    }*/
+
+    public int emailExists(int id, String email) {
+        return countDuplicates(id, "SELECT * FROM user WHERE EMAIL='" + email + "'");
+    }
+
+    public int loginExists(int id, String login) {
+        return countDuplicates(id, "SELECT * FROM user WHERE LOGIN='" + login + "'");
     }
 
     //todo: how to deal with exceptions???
@@ -182,8 +205,12 @@ public class DBUsers {
                 String[] data = line.split(csvSplitBy);
                 try {
                     System.out.println(line);
-                    user.setFirstName(HelpUtils.formatString(data[0].trim()));
-                    user.setLastName(HelpUtils.formatString(data[1].trim()));
+                    if (HelpUtils.checkName(data[0].trim()))
+                        user.setFirstName(HelpUtils.formatString(data[0].trim()));
+                    else continue;
+                    if (HelpUtils.checkName(data[1].trim()))
+                        user.setLastName(HelpUtils.formatString(data[1].trim()));
+                    else continue;
                     if (HelpUtils.checkLogin(data[2].trim()))
                         user.setLogin(data[2].trim().toLowerCase());
                     else continue;
