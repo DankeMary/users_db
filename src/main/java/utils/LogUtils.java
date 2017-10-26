@@ -1,8 +1,8 @@
 package utils;
 
 public class LogUtils {
-    public static void printEmptyDBMessage(){
-        System.out.println("Database is empty.");
+    public static void printEmptyResMessage(){
+        System.out.println("No data to work with.");
     }
 
     public static void printInputIDForActionMessage(String action){

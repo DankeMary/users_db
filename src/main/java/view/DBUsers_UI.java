@@ -89,7 +89,7 @@ public class DBUsers_UI {
 
     private static void editUser() {
         if (db.isEmpty()) {
-            LogUtils.printEmptyDBMessage();
+            LogUtils.printEmptyResMessage();
             return;
         }
 
@@ -123,7 +123,7 @@ public class DBUsers_UI {
 
     private static void deleteUser() {
         if (db.isEmpty()) {
-            LogUtils.printEmptyDBMessage();
+            LogUtils.printEmptyResMessage();
             return;
         }
         System.out.println("Print the list?");
@@ -153,7 +153,7 @@ public class DBUsers_UI {
 
     private static void deleteSeveralUsers() {
         if (db.isEmpty()) {
-            LogUtils.printEmptyDBMessage();
+            LogUtils.printEmptyResMessage();
             return;
         }
         System.out.println("Print the list?");
@@ -177,7 +177,7 @@ public class DBUsers_UI {
 
     private static void sortUsers() {
         if (db.isEmpty()) {
-            LogUtils.printEmptyDBMessage();
+            LogUtils.printEmptyResMessage();
             return;
         }
         printUsers(db.sortUsers());
@@ -185,7 +185,7 @@ public class DBUsers_UI {
 
     private static void filterUsers() {
         if (db.isEmpty()) {
-            LogUtils.printEmptyDBMessage();
+            LogUtils.printEmptyResMessage();
             return;
         }
         MenuUtils.printFilterCriteria();
@@ -221,7 +221,7 @@ public class DBUsers_UI {
 
     public static void saveToFile() {
         if (db.isEmpty()) {
-            LogUtils.printEmptyDBMessage();
+            LogUtils.printEmptyResMessage();
             return;
         }
 
@@ -232,8 +232,8 @@ public class DBUsers_UI {
         else {
             if (db.exportInfo(fileName))
                 System.out.println("Data from database was saved to file " + fileName);
-            else ;
-            //todo: !!!System.out.println("File with such name wasn't found!");
+            else
+                System.out.println("File with such name wasn't found!");
         }
 
     }
@@ -246,11 +246,11 @@ public class DBUsers_UI {
     private static void printUsers(ResultSet rs) {
         try {
             if (!rs.next())
-                LogUtils.printEmptyDBMessage();
+                LogUtils.printEmptyResMessage();
             else {
                 rs.beforeFirst();
                 while (rs.next()) {
-                    User user = new User(); //todo: is it needed?
+                    User user = new User();
                     user.setId(rs.getInt(1));
                     user.setFirstName(rs.getString(2));
                     user.setLastName(rs.getString(3));

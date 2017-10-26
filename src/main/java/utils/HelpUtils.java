@@ -119,6 +119,30 @@ public class HelpUtils {
         }
     }
 
+    public static String getLogin() {
+        String login;
+        while (true) {
+            login = getString().trim();
+
+            if (checkLogin(login))
+                return login.toLowerCase();
+            else
+                LogUtils.printWrongInputFormatMessage();
+        }
+    }
+
+    public static String getLogin(String basic) {
+        String login;
+        while (true) {
+            login = getString(basic).trim();
+
+            if (checkLogin(login))
+                return login.toLowerCase();
+            else
+                LogUtils.printWrongInputFormatMessage();
+        }
+    }
+
     public static String getEmail() {
         String email;
         while (true) {
@@ -170,7 +194,7 @@ public class HelpUtils {
         aUser.setLastName(getName(""));
 
         System.out.print("Login: ");
-        aUser.setLogin(getString());
+        aUser.setLogin(getLogin());
 
         System.out.print("Email: ");
         aUser.setEmail(getEmail());
@@ -185,7 +209,7 @@ public class HelpUtils {
         basic.setLastName(getName(basic.getLastName()));
 
         System.out.print("Login: ");
-        basic.setLogin(getString(basic.getLogin()));
+        basic.setLogin(getLogin(basic.getLogin()));
 
         System.out.print("Email: ");
         basic.setEmail(getEmail(basic.getEmail()));

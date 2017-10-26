@@ -274,6 +274,7 @@ public class DBUsers {
     public boolean exportInfo(String fileName) {
         ResultSet rs = null;
         try {
+            //PrintWriter pw = new PrintWriter("E:\\University\\course_3\\Java\\users_db\\src\\main\\resources\\" + fileName);
             PrintWriter pw = new PrintWriter(fileName);
             StringBuilder sb = new StringBuilder();
             rs = getAllUsers();
