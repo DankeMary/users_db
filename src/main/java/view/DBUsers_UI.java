@@ -56,8 +56,9 @@ public class DBUsers_UI {
                         break;
                 }
             }
+            db.disconnect();
         } catch (SQLException e) {
-            System.out.println("Couldn't connect to database");
+            System.out.println("Problems while connecting to database");
         }
     }
 
@@ -259,6 +260,7 @@ public class DBUsers_UI {
                 }
             }
         } catch (SQLException e) {
+            System.out.println("Problems while connecting to database");
         }
     }
 }

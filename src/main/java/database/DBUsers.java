@@ -5,6 +5,7 @@ import exception.EmailException;
 import exception.LoginException;
 import utils.HelpUtils;
 
+import javax.swing.plaf.nimbus.State;
 import java.io.*;
 import java.sql.*;
 
@@ -33,23 +34,37 @@ public class DBUsers {
     }
 
     //disconnect conn close
-    private boolean infoExists(String query) {
+    public boolean disconnect(){
         try {
-            Statement st = conn.createStatement();
+            conn.close();
+            return true;
+        } catch (SQLException e) {return false;}
+    }
+    private boolean infoExists(String query) {
+        Statement st = null;
+        ResultSet rs = null;
+        try {
+            st = conn.createStatement();
 
-            ResultSet rs = st.executeQuery(query);
+            rs = st.executeQuery(query);
             return (rs.next());
         } catch (SQLException e) {
-            //return false;
-        }finally { /*close resset -> statement*/}
-        return false;
+            return false;
+        }//finally { /*close resset -> statement*/
+         finally {
+               // try { if (rs != null) rs.close(); } catch (Exception e) {};
+               // try { if (st != null) st.close(); } catch (Exception e) {};
+        }
+       // return false;
     }
     public int countDuplicates (int id, String query) {
         int cnt = 0;
+        Statement st = null;
+        ResultSet rs = null;
         try {
-            Statement st = conn.createStatement();
+            st = conn.createStatement();
 
-            ResultSet rs = st.executeQuery(query);
+            rs = st.executeQuery(query);
             while (rs.next())
                 if (rs.getInt(1) != id)
                     cnt++;
@@ -57,6 +72,9 @@ public class DBUsers {
         } catch (SQLException e) {
             //return false;
             return 0;
+        } finally {
+           // try { if (rs != null) rs.close(); } catch (Exception e) {};
+           // try { if (st != null) st.close(); } catch (Exception e) {};
         }
     }
 
@@ -78,25 +96,31 @@ public class DBUsers {
 
     //todo: how to deal with exceptions???
     public void addInfo(User user) throws LoginException, EmailException {
+        Statement st = null;
         if (infoExists("SELECT * FROM user WHERE LOGIN='" + user.getLogin() + "'"))
             throw new LoginException();
         else if (infoExists("SELECT * FROM user WHERE EMAIL='" + user.getEmail() + "'"))
             throw new EmailException();
         else
             try {
-                Statement st = conn.createStatement();
+                st = conn.createStatement();
                 st.execute(String.format("INSERT INTO user(NAME, LAST_NAME, LOGIN, EMAIL) VALUES('%s', '%s', '%s', '%s')",
                         user.getFirstName(), user.getLastName(), user.getLogin(), user.getEmail()));
             } catch (SQLException e) {
-                //return false;
+                //todo: !!!! return something
+                // return false;
+            }finally {
+              //  try { if (st != null) st.close(); } catch (Exception e) {};
             }
     }
 
     public User getUserByID(int id) {
+        Statement st = null;
+        ResultSet rs = null;
         if (infoExists("SELECT * FROM user WHERE ID=" + id))
             try {
-                Statement st = conn.createStatement();
-                ResultSet rs = st.executeQuery("SELECT * FROM user WHERE ID=" + id);
+                st = conn.createStatement();
+                rs = st.executeQuery("SELECT * FROM user WHERE ID=" + id);
 
                 User user = new User();
                 rs.next();
@@ -108,97 +132,105 @@ public class DBUsers {
                 return user;
             } catch (SQLException e) {
                 return null;
+            }finally {
+               // try { if (rs != null) rs.close(); } catch (Exception e) {};
+               // try { if (st != null) st.close(); } catch (Exception e) {};
             }
         else
             return null;
     }
 
     public boolean editInfo(User user) {
+        Statement st = null;
         if (!infoExists("SELECT * FROM user WHERE ID =" + user.getId()))
             return false;
         else {
             try {
-                Statement st = conn.createStatement();
+                st = conn.createStatement();
                 st.executeUpdate("UPDATE user SET NAME='" + user.getFirstName() + "', LAST_NAME='" + user.getLastName()
                         + "', LOGIN='" + user.getLogin() + "', EMAIL='" + user.getEmail() + "' WHERE ID=" + user.getId());
                 return true;
             } catch (SQLException e) {
                 return false;
+            }finally {
+             //   try { if (st != null) st.close(); } catch (Exception e) {};
             }
         }
     }
 
     public boolean deleteInfo(int id) {
+        Statement st = null;
         if (!infoExists("SELECT * FROM user WHERE ID =" + id))
             return false;
         else {
             try {
-                Statement st = conn.createStatement();
+                st = conn.createStatement();
                 st.executeUpdate("DELETE FROM user WHERE ID=" + id);
                 return true;
             } catch (SQLException e) {
                 return false;
+            }finally {
+              //  try { if (st != null) st.close(); } catch (Exception e) {};
             }
         }
     }
 
     public boolean isEmpty() {
         String query_id = "SELECT * FROM user";
+        Statement st = null;
+        ResultSet rs = null;
         try {
-            Statement st = conn.createStatement();
+            st = conn.createStatement();
 
-            ResultSet rs = st.executeQuery(query_id);
+            rs = st.executeQuery(query_id);
             return !rs.next();
         } catch (SQLException e) {
             //return false;
+        } finally {
+           // try { if (rs != null) rs.close(); } catch (Exception e) {};
+           // try { if (st != null) st.close(); } catch (Exception e) {};
         }
-        return true;
+        return true; //todo: ????? needed?
     }
 
+    private ResultSet runQuery(String query) {
+        Statement st = null;
+        try {
+            st = conn.createStatement();
+
+            return st.executeQuery(query);
+        } catch (SQLException e) {
+            return null;
+        }finally {
+          //  try { if (st != null) st.close(); } catch (Exception e) {};
+        }
+    }
     public ResultSet sortUsers() {
         String query_sort = "SELECT * FROM user ORDER BY `LOGIN`";
-        try {
-            Statement st = conn.createStatement();
-
-            return st.executeQuery(query_sort);
-        } catch (SQLException e) {
-            // return null;
-        }
-        return null;
-
+        return runQuery(query_sort);
+        //return null;
     }
 
     public ResultSet filterUsers(String criterion) {
         String query_filter = "SELECT * FROM user WHERE EMAIL LIKE '" + criterion + "'";
-        try {
-            Statement st = conn.createStatement();
-
-            return st.executeQuery(query_filter);
-        } catch (SQLException e) {
-            // return null;
-        }
-        return null;
+        return runQuery(query_filter);
+        //return null;
     }
 
     public ResultSet getAllUsers() {
         String query = "SELECT * FROM user";
-        try {
-            Statement st = conn.createStatement();
-
-            return st.executeQuery(query);
-        } catch (SQLException e) {
-            // return null;
-        }
-        return null;
+        return runQuery(query);
+        //return null;
     }
 
     public boolean importInfo(String fileName) {
         BufferedReader br = null;
         String line = "";
         String csvSplitBy = ",";
+        File file = null;
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            File file = new File(classLoader.getResource(fileName).getFile());
+            file = new File(classLoader.getResource(fileName).getFile());
             br = new BufferedReader(new FileReader(file));
             User user = new User();
 
@@ -240,29 +272,30 @@ public class DBUsers {
     }
 
     public boolean exportInfo(String fileName) {
+        ResultSet rs = null;
         try {
             PrintWriter pw = new PrintWriter(fileName);
             StringBuilder sb = new StringBuilder();
-            ResultSet rs = getAllUsers();
+            rs = getAllUsers();
             try {
                 while (rs.next()) {
                     rs.getInt(1);
-                    sb.append(rs.getString(2) + ',');
-                    sb.append(rs.getString(3) + ',');
-                    sb.append(rs.getString(4) + ',');
-                    sb.append(rs.getString(5));
-                    sb.append('\n');
+                    sb.append(rs.getString(2)).append(',');
+                    sb.append(rs.getString(3)).append(',');
+                    sb.append(rs.getString(4)).append(',');
+                    sb.append(rs.getString(5)).append('\n');
                     pw.write(sb.toString());
                     sb.setLength(0);
                 }
-            } catch (SQLException e) {
-            } finally {
+            } catch (SQLException e) { return false;}
+            finally {
                 pw.close();
             }
         } catch (FileNotFoundException e) {
             return false;
-        }  //todo:????
-
+        } finally {
+          //  try { if (rs != null) rs.close(); } catch (Exception e) {};
+        }
         return true;
     }
 }
