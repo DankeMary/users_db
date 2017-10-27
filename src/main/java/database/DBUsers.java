@@ -3,11 +3,13 @@ package database;
 import entity.User;
 import exception.EmailException;
 import exception.LoginException;
+import utils.FileUtils;
 import utils.HelpUtils;
 
 import javax.swing.plaf.nimbus.State;
 import java.io.*;
 import java.sql.*;
+import java.util.ArrayList;
 
 
 //todo:     CLOSING CONNECTIONS (when)
@@ -223,8 +225,19 @@ public class DBUsers {
         //return null;
     }
 
+    private boolean checkData(User user) {
+        if (!HelpUtils.checkName(user.getFirstName()))
+            return false;
+        if (!HelpUtils.checkName(user.getLastName()))
+            return false;
+        if (!HelpUtils.checkLogin(user.getLogin()))
+            return false;
+        if (!HelpUtils.checkEmail(user.getEmail()))
+            return false;
+        return true;
+    }
     public boolean importInfo(String fileName) {
-        BufferedReader br = null;
+        /*BufferedReader br = null;
         String line = "";
         String csvSplitBy = ",";
         File file = null;
@@ -268,7 +281,23 @@ public class DBUsers {
                     br.close();
                 } catch (IOException e) {
                 }
+        }*/
+        FileUtils fileConnector = new FileUtils();
+        try {
+            ArrayList<User> users = fileConnector.importInfo(fileName);
+            for (User u : users) {
+                try {
+                    if (checkData(u))
+                        addInfo(u);
+                } catch(LoginException e){
+                }
+                  catch(EmailException e){
+                }
+            }
+        } catch (FileNotFoundException e) {
+            return false;
         }
+        return true;
     }
 
     public boolean exportInfo(String fileName) {
