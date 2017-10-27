@@ -274,7 +274,23 @@ public class DBUsers {
     public boolean exportInfo(String fileName) {
         ResultSet rs = null;
         try {
+            /*
+            * Should not write to resources folder because resources are compiled and stored under ./target/....
+            * User should input a path, check with Java File if path exists, if not try to create, if not then ask again
+            * and then save to that path. That includes the input file as well.
+            * Resources folder is for files that will be used during the program like images or css or js not for
+            * dynamic things
+            * */
             //PrintWriter pw = new PrintWriter("E:\\University\\course_3\\Java\\users_db\\src\\main\\resources\\" + fileName);
+            //ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+           // PrintWriter pw = new PrintWriter(new File(classLoader.getResource(fileName).getFile()));
+            //File file = new File(classLoader.getResource("test.csv").getPath());
+            /*if(file.createNewFile()){
+                System.out.println("Worked");
+            }*/
+
+            //System.out.println(file.getPath());
+            //PrintWriter pw = new PrintWriter(file);
             PrintWriter pw = new PrintWriter(fileName);
             StringBuilder sb = new StringBuilder();
             rs = getAllUsers();
@@ -294,6 +310,8 @@ public class DBUsers {
             }
         } catch (FileNotFoundException e) {
             return false;
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
           //  try { if (rs != null) rs.close(); } catch (Exception e) {};
         }
