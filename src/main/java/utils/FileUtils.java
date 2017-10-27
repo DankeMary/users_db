@@ -6,6 +6,8 @@ import exception.LoginException;
 
 import java.io.*;
 import java.lang.reflect.Array;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class FileUtils {
@@ -43,5 +45,31 @@ public class FileUtils {
                 } catch (IOException e) {
                 }
         }
+    }
+    public boolean exportInfo(String fileName, ResultSet rs) {
+        try {
+            PrintWriter pw = new PrintWriter(fileName);
+            StringBuilder sb = new StringBuilder();
+            try {
+                while (rs.next()) {
+                    rs.getInt(1);
+                    sb.append(rs.getString(2)).append(',');
+                    sb.append(rs.getString(3)).append(',');
+                    sb.append(rs.getString(4)).append(',');
+                    sb.append(rs.getString(5)).append('\n');
+                    pw.write(sb.toString());
+                    sb.setLength(0);
+                }
+            } catch (SQLException e) { return false;}
+            finally {
+                pw.close();
+            }
+        } catch (FileNotFoundException e) {
+            //return false;
+        } catch (IOException e) {
+        } finally {
+            //  try { if (rs != null) rs.close(); } catch (Exception e) {};
+        }
+        return true;
     }
 }

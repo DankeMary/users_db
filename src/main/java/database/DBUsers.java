@@ -302,7 +302,7 @@ public class DBUsers {
 
     public boolean exportInfo(String fileName) {
         ResultSet rs = null;
-        try {
+        //try {
             /*
             * Should not write to resources folder because resources are compiled and stored under ./target/....
             * User should input a path, check with Java File if path exists, if not try to create, if not then ask again
@@ -320,10 +320,10 @@ public class DBUsers {
 
             //System.out.println(file.getPath());
             //PrintWriter pw = new PrintWriter(file);
-            PrintWriter pw = new PrintWriter(fileName);
-            StringBuilder sb = new StringBuilder();
+            /*PrintWriter pw = new PrintWriter(fileName);
+            StringBuilder sb = new StringBuilder();*/
             rs = getAllUsers();
-            try {
+            /*try {
                 while (rs.next()) {
                     rs.getInt(1);
                     sb.append(rs.getString(2)).append(',');
@@ -343,7 +343,9 @@ public class DBUsers {
             e.printStackTrace();
         } finally {
           //  try { if (rs != null) rs.close(); } catch (Exception e) {};
-        }
+        }*/
+        FileUtils fileConnector = new FileUtils();
+        fileConnector.exportInfo(fileName, rs);
         return true;
     }
 }
