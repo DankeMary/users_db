@@ -215,7 +215,7 @@ public class DBUsers_UI {
             if (db.importInfo(fileName))
                 System.out.println("Data from file was uploaded");
             else
-                System.out.println("File with such name wasn't found!");
+                System.out.println("File with such name wasn't found or closed for reading!");
         }
     }
 
@@ -233,7 +233,7 @@ public class DBUsers_UI {
             if (db.exportInfo(fileName))
                 System.out.println("Data from database was saved to file " + fileName);
             else
-                System.out.println("File with such name wasn't found!");
+                System.out.println("File can't be created!");
         }
 
     }

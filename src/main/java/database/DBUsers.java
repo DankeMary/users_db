@@ -6,21 +6,10 @@ import exception.LoginException;
 import utils.FileUtils;
 import utils.HelpUtils;
 
-import javax.swing.plaf.nimbus.State;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 
-
-//todo:     CLOSING CONNECTIONS (when)
-/*
-    String query_id = "SELECT * FROM user WHERE ID =" + id;
-
-    String query_login = "SELECT * FROM user WHERE LOGIN='" + login +"'";
-
-    String query_email = "SELECT * FROM user WHERE EMAIL='" + email + "'";
-
-}*/
 public class DBUsers {
     private static final String URL = "jdbc:mysql://localhost:3306/users?useUnicode=true&useSSL=true&useJDBCCompliantTimezoneShift=true" +
             "&useLegacyDatetimeCode=false&serverTimezone=UTC";
@@ -35,7 +24,6 @@ public class DBUsers {
         }catch (SQLException e) {/*error trying to access db*/ }
     }
 
-    //disconnect conn close
     public boolean disconnect(){
         try {
             conn.close();
@@ -43,8 +31,8 @@ public class DBUsers {
         } catch (SQLException e) {return false;}
     }
     private boolean infoExists(String query) {
-        Statement st = null;
-        ResultSet rs = null;
+        Statement st;
+        ResultSet rs;
         try {
             st = conn.createStatement();
 
@@ -52,17 +40,12 @@ public class DBUsers {
             return (rs.next());
         } catch (SQLException e) {
             return false;
-        }//finally { /*close resset -> statement*/
-         finally {
-               // try { if (rs != null) rs.close(); } catch (Exception e) {};
-               // try { if (st != null) st.close(); } catch (Exception e) {};
         }
-       // return false;
     }
     public int countDuplicates (int id, String query) {
         int cnt = 0;
-        Statement st = null;
-        ResultSet rs = null;
+        Statement st;
+        ResultSet rs;
         try {
             st = conn.createStatement();
 
@@ -72,21 +55,9 @@ public class DBUsers {
                     cnt++;
             return cnt;
         } catch (SQLException e) {
-            //return false;
-            return 0;
-        } finally {
-           // try { if (rs != null) rs.close(); } catch (Exception e) {};
-           // try { if (st != null) st.close(); } catch (Exception e) {};
+            return -1;
         }
     }
-
-   /* public boolean emailExists(String email) {
-        return infoExists("SELECT * FROM user WHERE EMAIL='" + email + "'");
-    }
-
-    public boolean loginExists(String login) {
-        return infoExists("SELECT * FROM user WHERE LOGIN='" + login + "'");
-    }*/
 
     public int emailExists(int id, String email) {
         return countDuplicates(id, "SELECT * FROM user WHERE EMAIL='" + email + "'");
@@ -98,7 +69,7 @@ public class DBUsers {
 
     //todo: how to deal with exceptions???
     public void addInfo(User user) throws LoginException, EmailException {
-        Statement st = null;
+        Statement st;
         if (infoExists("SELECT * FROM user WHERE LOGIN='" + user.getLogin() + "'"))
             throw new LoginException();
         else if (infoExists("SELECT * FROM user WHERE EMAIL='" + user.getEmail() + "'"))
@@ -109,16 +80,13 @@ public class DBUsers {
                 st.execute(String.format("INSERT INTO user(NAME, LAST_NAME, LOGIN, EMAIL) VALUES('%s', '%s', '%s', '%s')",
                         user.getFirstName(), user.getLastName(), user.getLogin(), user.getEmail()));
             } catch (SQLException e) {
-                //todo: !!!! return something
                 // return false;
-            }finally {
-              //  try { if (st != null) st.close(); } catch (Exception e) {};
             }
     }
 
     public User getUserByID(int id) {
-        Statement st = null;
-        ResultSet rs = null;
+        Statement st;
+        ResultSet rs;
         if (infoExists("SELECT * FROM user WHERE ID=" + id))
             try {
                 st = conn.createStatement();
@@ -134,16 +102,13 @@ public class DBUsers {
                 return user;
             } catch (SQLException e) {
                 return null;
-            }finally {
-               // try { if (rs != null) rs.close(); } catch (Exception e) {};
-               // try { if (st != null) st.close(); } catch (Exception e) {};
             }
         else
             return null;
     }
 
     public boolean editInfo(User user) {
-        Statement st = null;
+        Statement st;
         if (!infoExists("SELECT * FROM user WHERE ID =" + user.getId()))
             return false;
         else {
@@ -154,14 +119,12 @@ public class DBUsers {
                 return true;
             } catch (SQLException e) {
                 return false;
-            }finally {
-             //   try { if (st != null) st.close(); } catch (Exception e) {};
             }
         }
     }
 
     public boolean deleteInfo(int id) {
-        Statement st = null;
+        Statement st;
         if (!infoExists("SELECT * FROM user WHERE ID =" + id))
             return false;
         else {
@@ -171,58 +134,46 @@ public class DBUsers {
                 return true;
             } catch (SQLException e) {
                 return false;
-            }finally {
-              //  try { if (st != null) st.close(); } catch (Exception e) {};
             }
         }
     }
 
     public boolean isEmpty() {
         String query_id = "SELECT * FROM user";
-        Statement st = null;
-        ResultSet rs = null;
+        Statement st;
+        ResultSet rs;
         try {
             st = conn.createStatement();
-
             rs = st.executeQuery(query_id);
             return !rs.next();
         } catch (SQLException e) {
             //return false;
-        } finally {
-           // try { if (rs != null) rs.close(); } catch (Exception e) {};
-           // try { if (st != null) st.close(); } catch (Exception e) {};
         }
-        return true; //todo: ????? needed?
+        return true;
     }
 
     private ResultSet runQuery(String query) {
-        Statement st = null;
+        Statement st;
         try {
             st = conn.createStatement();
-
             return st.executeQuery(query);
         } catch (SQLException e) {
             return null;
-        }finally {
-          //  try { if (st != null) st.close(); } catch (Exception e) {};
         }
     }
     public ResultSet sortUsers() {
         String query_sort = "SELECT * FROM user ORDER BY `LOGIN`";
         return runQuery(query_sort);
-        //return null;
     }
 
     public ResultSet filterUsers(String criterion) {
         String query_filter = "SELECT * FROM user WHERE EMAIL LIKE '" + criterion + "'";
         return runQuery(query_filter);
-        //return null;
     }
 
     public ResultSet getAllUsers() {
         String query = "SELECT * FROM user";
         return runQuery(query);
-        //return null;
     }
 
     private boolean checkData(User user) {
@@ -232,56 +183,10 @@ public class DBUsers {
             return false;
         if (!HelpUtils.checkLogin(user.getLogin()))
             return false;
-        if (!HelpUtils.checkEmail(user.getEmail()))
-            return false;
-        return true;
+        return !HelpUtils.checkEmail(user.getEmail());
     }
+
     public boolean importInfo(String fileName) {
-        /*BufferedReader br = null;
-        String line = "";
-        String csvSplitBy = ",";
-        File file = null;
-        try {
-            ClassLoader classLoader = getClass().getClassLoader();
-            file = new File(classLoader.getResource(fileName).getFile());
-            br = new BufferedReader(new FileReader(file));
-            User user = new User();
-
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(csvSplitBy);
-                try {
-                    System.out.println(line);
-                    if (HelpUtils.checkName(data[0].trim()))
-                        user.setFirstName(HelpUtils.formatString(data[0].trim()));
-                    else continue;
-                    if (HelpUtils.checkName(data[1].trim()))
-                        user.setLastName(HelpUtils.formatString(data[1].trim()));
-                    else continue;
-                    if (HelpUtils.checkLogin(data[2].trim()))
-                        user.setLogin(data[2].trim().toLowerCase());
-                    else continue;
-                    if (HelpUtils.checkEmail(data[3].trim()))
-                        user.setEmail(data[3].trim().toLowerCase());
-                    else continue;
-
-                    addInfo(user);
-                } catch (LoginException e) {}
-                  catch (EmailException e) {}
-            }
-            return true;
-        } catch (FileNotFoundException e) {
-            return false;
-        } catch (IOException e) {
-            return false;
-        } catch (NullPointerException e) {
-            return false;
-        } finally {
-            if (br != null)
-                try {
-                    br.close();
-                } catch (IOException e) {
-                }
-        }*/
         FileUtils fileConnector = new FileUtils();
         try {
             ArrayList<User> users = fileConnector.importInfo(fileName);
@@ -301,51 +206,8 @@ public class DBUsers {
     }
 
     public boolean exportInfo(String fileName) {
-        ResultSet rs = null;
-        //try {
-            /*
-            * Should not write to resources folder because resources are compiled and stored under ./target/....
-            * User should input a path, check with Java File if path exists, if not try to create, if not then ask again
-            * and then save to that path. That includes the input file as well.
-            * Resources folder is for files that will be used during the program like images or css or js not for
-            * dynamic things
-            * */
-            //PrintWriter pw = new PrintWriter("E:\\University\\course_3\\Java\\users_db\\src\\main\\resources\\" + fileName);
-            //ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-           // PrintWriter pw = new PrintWriter(new File(classLoader.getResource(fileName).getFile()));
-            //File file = new File(classLoader.getResource("test.csv").getPath());
-            /*if(file.createNewFile()){
-                System.out.println("Worked");
-            }*/
-
-            //System.out.println(file.getPath());
-            //PrintWriter pw = new PrintWriter(file);
-            /*PrintWriter pw = new PrintWriter(fileName);
-            StringBuilder sb = new StringBuilder();*/
-            rs = getAllUsers();
-            /*try {
-                while (rs.next()) {
-                    rs.getInt(1);
-                    sb.append(rs.getString(2)).append(',');
-                    sb.append(rs.getString(3)).append(',');
-                    sb.append(rs.getString(4)).append(',');
-                    sb.append(rs.getString(5)).append('\n');
-                    pw.write(sb.toString());
-                    sb.setLength(0);
-                }
-            } catch (SQLException e) { return false;}
-            finally {
-                pw.close();
-            }
-        } catch (FileNotFoundException e) {
-            return false;
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-          //  try { if (rs != null) rs.close(); } catch (Exception e) {};
-        }*/
+        ResultSet rs = getAllUsers();
         FileUtils fileConnector = new FileUtils();
-        fileConnector.exportInfo(fileName, rs);
-        return true;
+        return fileConnector.exportInfo(fileName, rs);
     }
 }
