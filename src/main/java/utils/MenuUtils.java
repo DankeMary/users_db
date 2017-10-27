@@ -1,7 +1,7 @@
 package utils;
 
 //Filter by email
-//Sort by Last name
+//Sort by login
 //Changes by ID
 public class MenuUtils {
     public static int getMenuItem(int min, int max) {
@@ -20,7 +20,7 @@ public class MenuUtils {
         System.out.println("7 - Filter users by email");
         System.out.println("8 - Upload from file");
         System.out.println("9 - Save to file");
-        System.out.println("0 - Go to Main Menu");
+        System.out.println("0 - Exit");
         System.out.println("------------------");
     }
 

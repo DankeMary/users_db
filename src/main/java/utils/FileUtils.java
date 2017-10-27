@@ -8,11 +8,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class FileUtils {
-    public static final String DELIMETER = ",";
+    private static final String DELIMETER = ",";
     public ArrayList<User> importInfo(String fileName) throws FileNotFoundException {
         BufferedReader br = null;
         String line;
-        //String csvSplitBy = ",";
         ArrayList<User> users = new ArrayList<User>();
         try {
             ClassLoader classLoader = getClass().getClassLoader();

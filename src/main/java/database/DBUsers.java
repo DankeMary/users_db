@@ -67,7 +67,6 @@ public class DBUsers {
         return countDuplicates(id, "SELECT * FROM user WHERE LOGIN='" + login + "'");
     }
 
-    //todo: how to deal with exceptions???
     public void addInfo(User user) throws LoginException, EmailException {
         Statement st;
         if (infoExists("SELECT * FROM user WHERE LOGIN='" + user.getLogin() + "'"))
@@ -183,7 +182,7 @@ public class DBUsers {
             return false;
         if (!HelpUtils.checkLogin(user.getLogin()))
             return false;
-        return !HelpUtils.checkEmail(user.getEmail());
+        return HelpUtils.checkEmail(user.getEmail());
     }
 
     public boolean importInfo(String fileName) {

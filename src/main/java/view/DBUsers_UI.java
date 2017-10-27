@@ -58,7 +58,7 @@ public class DBUsers_UI {
             }
             db.disconnect();
         } catch (SQLException e) {
-            System.out.println("Problems while connecting to database");
+            LogUtils.printConnectionError();
         }
     }
 
@@ -97,20 +97,20 @@ public class DBUsers_UI {
         int userID = HelpUtils.getInt(1, Integer.MAX_VALUE);
         User user = db.getUserByID(userID);
         if (user == null) {
-            System.out.println("User with such ID wasn't found"); //LogUtils.printItemNotFoundMessage(userID);
+            LogUtils.printUserNotFoundMessage(userID);
             return;
         }
         HelpUtils.getUser(user);
 
         while (true) {
             if (db.loginExists(user.getId(), user.getLogin()) > 0) {
-                System.out.println("User with such login already exists! Change the login");
+                LogUtils.printUserAlreadyExistsdMessage("login");
                 System.out.print("Login: ");
                 user.setLogin(HelpUtils.getString());
                 continue;
             }
             if (db.emailExists(user.getId(), user.getEmail()) > 0) {
-                System.out.println("User with such email already exists! Change the email");
+                LogUtils.printUserAlreadyExistsdMessage("email");
                 System.out.print("Email: ");
                 user.setEmail(HelpUtils.getEmail());
                 continue;
@@ -135,16 +135,16 @@ public class DBUsers_UI {
         if (db.deleteInfo(userID))
             LogUtils.printActionResult(userID, "deleted");
         else
-            LogUtils.printItemNotFoundMessage(userID);
+            LogUtils.printUserNotFoundMessage(userID);
     }
 
     private static void deleteUser(String id) {
         try {
-            int itemID = Integer.parseInt(id);
-            if (db.deleteInfo(itemID))
-                LogUtils.printActionResult(itemID, "removed");
+            int userID = Integer.parseInt(id);
+            if (db.deleteInfo(userID))
+                LogUtils.printActionResult(userID, "removed");
             else {
-                LogUtils.printItemNotFoundMessage(itemID);
+                LogUtils.printUserNotFoundMessage(userID);
             }
         } catch (NumberFormatException e) {
             LogUtils.printWrongInputFormatMessage(id);
@@ -203,7 +203,6 @@ public class DBUsers_UI {
 
         ResultSet res = db.filterUsers(query);
         printUsers(res);
-
     }
 
     public static void readFromFile() {
@@ -235,7 +234,6 @@ public class DBUsers_UI {
             else
                 System.out.println("File can't be created!");
         }
-
     }
 
     private static void printUsers() {
@@ -260,7 +258,7 @@ public class DBUsers_UI {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Problems while connecting to database");
+            LogUtils.printConnectionError();
         }
     }
 }

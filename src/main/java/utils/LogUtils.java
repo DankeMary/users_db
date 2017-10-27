@@ -11,8 +11,11 @@ public class LogUtils {
     public static void printActionResult(int itemID, String action){
         System.out.println("Item with ID = " + itemID + " was " + action + ".");
     }
-    public static void printItemNotFoundMessage(int itemID) {
-        System.out.println("Item with ID = " + itemID + " wasn't found");
+    public static void printUserNotFoundMessage(int userID) {
+        System.out.println("User with ID = " + userID + " wasn't found");
+    }
+    public static void printUserAlreadyExistsdMessage(String field) {
+        System.out.println("User with such " + field + " already exists. Change the " + field);
     }
     public static void printWrongInputFormatMessage(){
         System.out.println("Wrong input!");
@@ -34,4 +37,8 @@ public class LogUtils {
     public static void printEmptyInputError(){
         System.out.println("Empty input is not allowed! Repeat.");
     }
+    public static void printConnectionError(){
+        System.out.println("Problems while connecting to database");
+    }
+
 }

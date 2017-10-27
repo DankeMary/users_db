@@ -1,8 +1,6 @@
 package exception;
 
 public class EmailException extends Exception {
-    public EmailException() {
-
-    }
+    public EmailException() {  }
 }
 

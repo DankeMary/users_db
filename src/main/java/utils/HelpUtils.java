@@ -94,18 +94,6 @@ public class HelpUtils {
                 return str.trim().toLowerCase();
         }
     }
-/*
-    public static String getName() {
-        String name;
-        while (true) {
-            name = getString("").trim();
-
-            if (checkName(name))
-                return formatString(name);
-            else
-                LogUtils.printWrongInputCharsFormatMessage();
-        }
-    }*/
 
     public static String getName(String basic) {
         String name;
@@ -166,7 +154,7 @@ public class HelpUtils {
                 LogUtils.printWrongInputFormatMessage();
         }
     }
-    //todo: !!!!!!!!!! filename chars
+
     public static String getFileName(String basic) {
         String fileName = HelpUtils.getString(basic);
 
