@@ -1,6 +1,7 @@
 package utils;
 
 import entity.User;
+
 import java.util.Scanner;
 
 public class HelpUtils {

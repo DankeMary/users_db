@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class FileUtils {
-    private static final String DELIMETER = ",";
+    private static final String DELIMITER = ",";
 
     public static ArrayList<User> importInfo(String fileName) throws FileNotFoundException {
         BufferedReader br = null;
@@ -16,7 +16,7 @@ public class FileUtils {
             br = new BufferedReader(new FileReader(fileName));
 
             while ((line = br.readLine()) != null) {
-                String[] data = line.split(DELIMETER);
+                String[] data = line.split(DELIMITER);
                 User user = new User();
                 user.setFirstName(HelpUtils.formatString(data[0].trim()));
                 user.setLastName(HelpUtils.formatString(data[1].trim()));

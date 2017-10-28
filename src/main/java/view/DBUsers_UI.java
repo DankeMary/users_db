@@ -202,8 +202,7 @@ public class DBUsers_UI {
         else
             query = "%" + criterionStr;
 
-        ResultSet res = db.filterUsers(query);
-        printUsers(res);
+        printUsers(db.filterUsers(query));
     }
 
     public static void readFromFile() {
@@ -236,16 +235,19 @@ public class DBUsers_UI {
                 System.out.println("File can't be created!");
         }
     }
-    //work with list of users
+
     private static void printUsers() {
-        printUsers(db.getAllUsers());
+        if (db.isEmpty())
+            LogUtils.printEmptyResMessage();
+        else
+            printUsers(db.getAllUsers());
     }
 
     private static void printUsers(ArrayList<User> users) {
         if (users == null)
             LogUtils.printEmptyResMessage();
         else {
-            for(User u : users)
+            for (User u : users)
                 System.out.println(u);
         }
     }

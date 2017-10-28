@@ -7,7 +7,8 @@ public class User {
     private String login;
     private String email;
 
-    public User() { }
+    public User() {
+    }
 
     public User(int id, String login, String email) {
         this.id = id;
@@ -37,7 +38,7 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("ID [ %d ] - FIRST NAME [ %s ] - LAST NAME [ %s ] - LOGIN [ %s ] - E-MAIL [ %s ]", id, firstName, lastName, login, email);
+        return String.format("[ID]: %d  [FIRST NAME]: %s  [LAST NAME]: %s  [LOGIN]: %s  [E-MAIL]: %s ", id, firstName, lastName, login, email);
     }
 
     public Integer getId() {

@@ -15,7 +15,6 @@ public class DBUsers {
             "&useLegacyDatetimeCode=false&serverTimezone=UTC";
     private static final String user = "root";
     private static final String password = "root";
-    
 
     private static Connection conn;
 
@@ -34,26 +33,27 @@ public class DBUsers {
         }
     }
 
-    private boolean infoExists(String query) {
-        Statement st;
-        ResultSet rs;
+    private boolean infoExists(String query, String parameter) {
+        PreparedStatement preparedStatement;
         try {
-            st = conn.createStatement();
-            rs = st.executeQuery(query);
+            preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, parameter);
+            ResultSet rs = preparedStatement.executeQuery();
             return (rs.next());
         } catch (SQLException e) {
             return false;
         }
     }
 
-    public int countDuplicates(int id, String query) {
+    public int countDuplicates(int id, String query, String parameter) {
         int cnt = 0;
-        Statement st;
-        ResultSet rs;
-        try {
-            st = conn.createStatement();
 
-            rs = st.executeQuery(query);
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, parameter);
+            ResultSet rs = preparedStatement.executeQuery();
+
             while (rs.next())
                 if (rs.getInt(1) != id)
                     cnt++;
@@ -64,46 +64,39 @@ public class DBUsers {
     }
 
     public int emailExists(int id, String email) {
-        return countDuplicates(id, "SELECT * FROM user WHERE EMAIL='" + email + "'");
+        return countDuplicates(id, "SELECT ID FROM user WHERE EMAIL=?", email);
     }
 
     public int loginExists(int id, String login) {
-        return countDuplicates(id, "SELECT * FROM user WHERE LOGIN='" + login + "'");
+        return countDuplicates(id, "SELECT ID FROM user WHERE LOGIN=?", login);
     }
 
     public void addInfo(User user) throws LoginException, EmailException {
-        Statement st;
-        if (infoExists("SELECT * FROM user WHERE LOGIN='" + user.getLogin() + "'"))
+        if (infoExists("SELECT ID FROM user WHERE LOGIN=?", user.getLogin()))
             throw new LoginException();
-        else if (infoExists("SELECT * FROM user WHERE EMAIL='" + user.getEmail() + "'"))
+        else if (infoExists("SELECT ID FROM user WHERE EMAIL=?", user.getEmail()))
             throw new EmailException();
-        else
-            try {
-                //prepared statement
-                st = conn.createStatement();
-                st.execute(String.format("INSERT INTO user(NAME, LAST_NAME, LOGIN, EMAIL) VALUES('%s', '%s', '%s', '%s')",
-                        user.getFirstName(), user.getLastName(), user.getLogin(), user.getEmail()));
-            } catch (SQLException e) {
-                // return false;
-            }
+
+        try {
+            PreparedStatement preparedStatement =
+                    conn.prepareStatement("INSERT INTO user(NAME, LAST_NAME, LOGIN, EMAIL) VALUES(?, ?, ?, ?)");
+            preparedStatement.setString(1, user.getFirstName());
+            preparedStatement.setString(2, user.getLastName());
+            preparedStatement.setString(3, user.getLogin());
+            preparedStatement.setString(4, user.getEmail());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+        }
     }
 
     public User getUserByID(int id) {
-        Statement st;
-        ResultSet rs;
-        if (infoExists("SELECT * FROM user WHERE ID=" + id))
+        //if (infoExists("SELECT * FROM user WHERE ID=" + id))
+        if (infoExists("SELECT * FROM user WHERE ID=?", String.valueOf(id)))
             try {
-                st = conn.createStatement();
-                rs = st.executeQuery("SELECT * FROM user WHERE ID=" + id);
-
-                User user = new User();
-                rs.next();
-                user.setId(rs.getInt(1));
-                user.setFirstName(rs.getString(2));
-                user.setLastName(rs.getString(3));
-                user.setLogin(rs.getString(4));
-                user.setEmail(rs.getString(5));
-                return user;
+                PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM user WHERE ID=?");
+                preparedStatement.setInt(1, id);
+                ArrayList<User> users = convertToList(preparedStatement.executeQuery());
+                return (users == null) ? null : users.get(0);
             } catch (SQLException e) {
                 return null;
             }
@@ -112,14 +105,18 @@ public class DBUsers {
     }
 
     public boolean editInfo(User user) {
-        Statement st;
-        if (!infoExists("SELECT * FROM user WHERE ID =" + user.getId()))
+        if (!infoExists("SELECT * FROM user WHERE ID=?", String.valueOf(user.getId())))
             return false;
         else {
             try {
-                st = conn.createStatement();
-                st.executeUpdate("UPDATE user SET NAME='" + user.getFirstName() + "', LAST_NAME='" + user.getLastName()
-                        + "', LOGIN='" + user.getLogin() + "', EMAIL='" + user.getEmail() + "' WHERE ID=" + user.getId());
+                PreparedStatement preparedStatement =
+                        conn.prepareStatement("UPDATE user SET NAME=?, LAST_NAME=?, LOGIN=?, EMAIL=? WHERE ID=?");
+                preparedStatement.setString(1, user.getFirstName());
+                preparedStatement.setString(2, user.getLastName());
+                preparedStatement.setString(3, user.getLogin());
+                preparedStatement.setString(4, user.getEmail());
+                preparedStatement.setInt(5, user.getId());
+                preparedStatement.executeUpdate();
                 return true;
             } catch (SQLException e) {
                 return false;
@@ -128,13 +125,13 @@ public class DBUsers {
     }
 
     public boolean deleteInfo(int id) {
-        Statement st;
-        if (!infoExists("SELECT * FROM user WHERE ID =" + id))
+        if (!infoExists("SELECT * FROM user WHERE ID =?", String.valueOf(id)))
             return false;
         else {
             try {
-                st = conn.createStatement();
-                st.executeUpdate("DELETE FROM user WHERE ID=" + id);
+                PreparedStatement preparedStatement = conn.prepareStatement("DELETE FROM user WHERE ID=?");
+                preparedStatement.setInt(1, id);
+                preparedStatement.executeUpdate();
                 return true;
             } catch (SQLException e) {
                 return false;
@@ -143,17 +140,11 @@ public class DBUsers {
     }
 
     public boolean isEmpty() {
-        String query_id = "SELECT * FROM user";
-        Statement st;
-        ResultSet rs;
         try {
-            st = conn.createStatement();
-            rs = st.executeQuery(query_id);
-            return !rs.next();
+            return !getAllData().next();
         } catch (SQLException e) {
-            //return false;
+            return true;
         }
-        return true;
     }
 
     private ResultSet runQuery(String query) {
@@ -166,14 +157,19 @@ public class DBUsers {
         }
     }
 
-    public ResultSet sortUsers() {
+    public ArrayList<User> sortUsers() {
         String query_sort = "SELECT * FROM user ORDER BY `LOGIN`";
-        return runQuery(query_sort);
+        return convertToList(runQuery(query_sort));
     }
 
-    public ResultSet filterUsers(String criterion) {
-        String query_filter = "SELECT * FROM user WHERE EMAIL LIKE '" + criterion + "'";
-        return runQuery(query_filter);
+    public ArrayList<User> filterUsers(String criterion) {
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM user WHERE EMAIL LIKE ?");
+            preparedStatement.setString(1, criterion);
+            return convertToList(preparedStatement.executeQuery());
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     public ResultSet getAllData() {
@@ -195,14 +191,14 @@ public class DBUsers {
         try {
             ArrayList<User> users = FileUtils.importInfo(fileName);
             if (users != null)
-            for (User u : users) {
-                try {
-                    if (checkData(u))
-                        addInfo(u);
-                } catch (LoginException e) {
-                } catch (EmailException e) {
+                for (User u : users) {
+                    try {
+                        if (checkData(u))
+                            addInfo(u);
+                    } catch (LoginException e) {
+                    } catch (EmailException e) {
+                    }
                 }
-            }
         } catch (FileNotFoundException e) {
             return false;
         }
