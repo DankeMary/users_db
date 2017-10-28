@@ -3,20 +3,17 @@ package utils;
 import entity.User;
 
 import java.io.*;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class FileUtils {
     private static final String DELIMETER = ",";
-    public ArrayList<User> importInfo(String fileName) throws FileNotFoundException {
+
+    public static ArrayList<User> importInfo(String fileName) throws FileNotFoundException {
         BufferedReader br = null;
         String line;
         ArrayList<User> users = new ArrayList<User>();
         try {
-            ClassLoader classLoader = getClass().getClassLoader();
-            File file = new File(classLoader.getResource(fileName).getFile());
-            br = new BufferedReader(new FileReader(file));
+            br = new BufferedReader(new FileReader(fileName));
 
             while ((line = br.readLine()) != null) {
                 String[] data = line.split(DELIMETER);
@@ -40,26 +37,25 @@ public class FileUtils {
                 }
         }
     }
-    public boolean exportInfo(String fileName, ResultSet rs) {
+
+    public static boolean exportInfo(String fileName, ArrayList<User> users) {
+        PrintWriter pw = null;
         try {
-            PrintWriter pw = new PrintWriter(fileName);
+            pw = new PrintWriter(fileName);
             StringBuilder sb = new StringBuilder();
-            try {
-                while (rs.next()) {
-                    rs.getInt(1);
-                    sb.append(rs.getString(2)).append(',');
-                    sb.append(rs.getString(3)).append(',');
-                    sb.append(rs.getString(4)).append(',');
-                    sb.append(rs.getString(5)).append('\n');
-                    pw.write(sb.toString());
-                    sb.setLength(0);
-                }
-            } catch (SQLException e) { return false;}
-            finally {
-                pw.close();
+            for (User u : users) {
+                sb.append(u.getFirstName()).append(',');
+                sb.append(u.getLastName()).append(',');
+                sb.append(u.getLogin()).append(',');
+                sb.append(u.getEmail()).append('\n');
+                pw.write(sb.toString());
+                sb.setLength(0);
             }
         } catch (IOException e) {
             return false;
+        } finally {
+            if (pw != null)
+                pw.close();
         }
         return true;
     }

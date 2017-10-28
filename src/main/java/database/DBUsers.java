@@ -15,34 +15,38 @@ public class DBUsers {
             "&useLegacyDatetimeCode=false&serverTimezone=UTC";
     private static final String user = "root";
     private static final String password = "root";
+    
 
     private static Connection conn;
 
-    public DBUsers() throws SQLException{
+    public DBUsers() throws SQLException {
         try {
             conn = DriverManager.getConnection(URL, user, password);
-        }catch (SQLException e) {/*error trying to access db*/ }
+        } catch (SQLException e) {/*error trying to access db*/ }
     }
 
-    public boolean disconnect(){
+    public boolean disconnect() {
         try {
             conn.close();
             return true;
-        } catch (SQLException e) {return false;}
+        } catch (SQLException e) {
+            return false;
+        }
     }
+
     private boolean infoExists(String query) {
         Statement st;
         ResultSet rs;
         try {
             st = conn.createStatement();
-
             rs = st.executeQuery(query);
             return (rs.next());
         } catch (SQLException e) {
             return false;
         }
     }
-    public int countDuplicates (int id, String query) {
+
+    public int countDuplicates(int id, String query) {
         int cnt = 0;
         Statement st;
         ResultSet rs;
@@ -75,6 +79,7 @@ public class DBUsers {
             throw new EmailException();
         else
             try {
+                //prepared statement
                 st = conn.createStatement();
                 st.execute(String.format("INSERT INTO user(NAME, LAST_NAME, LOGIN, EMAIL) VALUES('%s', '%s', '%s', '%s')",
                         user.getFirstName(), user.getLastName(), user.getLogin(), user.getEmail()));
@@ -160,6 +165,7 @@ public class DBUsers {
             return null;
         }
     }
+
     public ResultSet sortUsers() {
         String query_sort = "SELECT * FROM user ORDER BY `LOGIN`";
         return runQuery(query_sort);
@@ -170,7 +176,7 @@ public class DBUsers {
         return runQuery(query_filter);
     }
 
-    public ResultSet getAllUsers() {
+    public ResultSet getAllData() {
         String query = "SELECT * FROM user";
         return runQuery(query);
     }
@@ -186,16 +192,15 @@ public class DBUsers {
     }
 
     public boolean importInfo(String fileName) {
-        FileUtils fileConnector = new FileUtils();
         try {
-            ArrayList<User> users = fileConnector.importInfo(fileName);
+            ArrayList<User> users = FileUtils.importInfo(fileName);
+            if (users != null)
             for (User u : users) {
                 try {
                     if (checkData(u))
                         addInfo(u);
-                } catch(LoginException e){
-                }
-                  catch(EmailException e){
+                } catch (LoginException e) {
+                } catch (EmailException e) {
                 }
             }
         } catch (FileNotFoundException e) {
@@ -204,9 +209,29 @@ public class DBUsers {
         return true;
     }
 
+    public ArrayList<User> getAllUsers() {
+        return convertToList(getAllData());
+    }
+
     public boolean exportInfo(String fileName) {
-        ResultSet rs = getAllUsers();
-        FileUtils fileConnector = new FileUtils();
-        return fileConnector.exportInfo(fileName, rs);
+        return FileUtils.exportInfo(fileName, getAllUsers());
+    }
+
+    private ArrayList<User> convertToList(ResultSet rs) {
+        ArrayList<User> users = new ArrayList<User>();
+        try {
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt(1));
+                user.setFirstName(rs.getString(2));
+                user.setLastName(rs.getString(3));
+                user.setLogin(rs.getString(4));
+                user.setEmail(rs.getString(5));
+                users.add(user);
+            }
+            return users;
+        } catch (SQLException e) {
+            return null;
+        }
     }
 }

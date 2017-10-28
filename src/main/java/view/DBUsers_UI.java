@@ -10,6 +10,7 @@ import utils.MenuUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class DBUsers_UI {
@@ -235,30 +236,17 @@ public class DBUsers_UI {
                 System.out.println("File can't be created!");
         }
     }
-
+    //work with list of users
     private static void printUsers() {
-        ResultSet rs = db.getAllUsers();
-        printUsers(rs);
+        printUsers(db.getAllUsers());
     }
 
-    private static void printUsers(ResultSet rs) {
-        try {
-            if (!rs.next())
-                LogUtils.printEmptyResMessage();
-            else {
-                rs.beforeFirst();
-                while (rs.next()) {
-                    User user = new User();
-                    user.setId(rs.getInt(1));
-                    user.setFirstName(rs.getString(2));
-                    user.setLastName(rs.getString(3));
-                    user.setLogin(rs.getString(4));
-                    user.setEmail(rs.getString(5));
-                    System.out.println(user);
-                }
-            }
-        } catch (SQLException e) {
-            LogUtils.printConnectionError();
+    private static void printUsers(ArrayList<User> users) {
+        if (users == null)
+            LogUtils.printEmptyResMessage();
+        else {
+            for(User u : users)
+                System.out.println(u);
         }
     }
 }
